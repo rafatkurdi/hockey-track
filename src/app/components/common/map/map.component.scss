@@ -1,0 +1,52 @@
+.map {
+  position: relative;
+
+  .title {
+    font-size: 12px;
+    font-weight: bold;
+    font-stretch: normal;
+    font-style: normal;
+    line-height: 1.5;
+    letter-spacing: normal;
+    text-align: center;
+    color: #ffffff;
+    position: absolute;
+    z-index: 10;
+    pointer-events: none;
+  }
+
+  .lh {
+    top: 37px;
+    left: 50px;
+  }
+
+  .ls {
+    top: 134px;
+    left: 50px;
+  }
+
+  .c {
+    top: 92px;
+    left: 136px;
+  }
+
+  .h5 {
+    top: 165px;
+    left: 132px;
+  }
+
+  .ph {
+    top: 37px;
+    left: 220px;
+  }
+
+  .ps {
+    top: 134px;
+    left: 220px;
+  }
+
+}
+
+svg path {
+  cursor: pointer;
+}

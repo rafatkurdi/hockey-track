@@ -1,0 +1,911 @@
+@font-face {
+  font-family: "Inter";
+  font-style: normal;
+  font-weight: 100;
+  font-display: swap;
+  src: url("/assets/fonts/Inter-Thin.woff2?v=3.13") format("woff2"),
+    url("/assets/fonts/Inter-Thin.woff?v=3.13") format("woff");
+}
+
+@font-face {
+  font-family: "Inter";
+  font-style: italic;
+  font-weight: 100;
+  font-display: swap;
+  src: url("/assets/fonts/Inter-ThinItalic.woff2?v=3.13") format("woff2"),
+    url("/assets/fonts/Inter-ThinItalic.woff?v=3.13") format("woff");
+}
+
+@font-face {
+  font-family: "Inter";
+  font-style: normal;
+  font-weight: 200;
+  font-display: swap;
+  src: url("/assets/fonts/Inter-ExtraLight.woff2?v=3.13") format("woff2"),
+    url("/assets/fonts/Inter-ExtraLight.woff?v=3.13") format("woff");
+}
+
+@font-face {
+  font-family: "Inter";
+  font-style: italic;
+  font-weight: 200;
+  font-display: swap;
+  src: url("/assets/fonts/Inter-ExtraLightItalic.woff2?v=3.13") format("woff2"),
+    url("/assets/fonts/Inter-ExtraLightItalic.woff?v=3.13") format("woff");
+}
+
+@font-face {
+  font-family: "Inter";
+  font-style: normal;
+  font-weight: 300;
+  font-display: swap;
+  src: url("/assets/fonts/Inter-Light.woff2?v=3.13") format("woff2"),
+    url("/assets/fonts/Inter-Light.woff?v=3.13") format("woff");
+}
+
+@font-face {
+  font-family: "Inter";
+  font-style: italic;
+  font-weight: 300;
+  font-display: swap;
+  src: url("/assets/fonts/Inter-LightItalic.woff2?v=3.13") format("woff2"),
+    url("/assets/fonts/Inter-LightItalic.woff?v=3.13") format("woff");
+}
+
+@font-face {
+  font-family: "Inter";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("/assets/fonts/Inter-Regular.woff2?v=3.13") format("woff2"),
+    url("/assets/fonts/Inter-Regular.woff?v=3.13") format("woff");
+}
+
+@font-face {
+  font-family: "Inter";
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+  src: url("/assets/fonts/Inter-Italic.woff2?v=3.13") format("woff2"),
+    url("/assets/fonts/Inter-Italic.woff?v=3.13") format("woff");
+}
+
+@font-face {
+  font-family: "Inter";
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url("/assets/fonts/Inter-Medium.woff2?v=3.13") format("woff2"),
+    url("/assets/fonts/Inter-Medium.woff?v=3.13") format("woff");
+}
+
+@font-face {
+  font-family: "Inter";
+  font-style: italic;
+  font-weight: 500;
+  font-display: swap;
+  src: url("/assets/fonts/Inter-MediumItalic.woff2?v=3.13") format("woff2"),
+    url("/assets/fonts/Inter-MediumItalic.woff?v=3.13") format("woff");
+}
+
+@font-face {
+  font-family: "Inter";
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url("/assets/fonts/Inter-SemiBold.woff2?v=3.13") format("woff2"),
+    url("/assets/fonts/Inter-SemiBold.woff?v=3.13") format("woff");
+}
+
+@font-face {
+  font-family: "Inter";
+  font-style: italic;
+  font-weight: 600;
+  font-display: swap;
+  src: url("/assets/fonts/Inter-SemiBoldItalic.woff2?v=3.13") format("woff2"),
+    url("/assets/fonts/Inter-SemiBoldItalic.woff?v=3.13") format("woff");
+}
+
+@font-face {
+  font-family: "Inter";
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url("/assets/fonts/Inter-Bold.woff2?v=3.13") format("woff2"),
+    url("/assets/fonts/Inter-Bold.woff?v=3.13") format("woff");
+}
+
+@font-face {
+  font-family: "Inter";
+  font-style: italic;
+  font-weight: 700;
+  font-display: swap;
+  src: url("/assets/fonts/Inter-BoldItalic.woff2?v=3.13") format("woff2"),
+    url("/assets/fonts/Inter-BoldItalic.woff?v=3.13") format("woff");
+}
+
+@font-face {
+  font-family: "Inter";
+  font-style: normal;
+  font-weight: 800;
+  font-display: swap;
+  src: url("/assets/fonts/Inter-ExtraBold.woff2?v=3.13") format("woff2"),
+    url("/assets/fonts/Inter-ExtraBold.woff?v=3.13") format("woff");
+}
+
+@font-face {
+  font-family: "Inter";
+  font-style: italic;
+  font-weight: 800;
+  font-display: swap;
+  src: url("/assets/fonts/Inter-ExtraBoldItalic.woff2?v=3.13") format("woff2"),
+    url("/assets/fonts/Inter-ExtraBoldItalic.woff?v=3.13") format("woff");
+}
+
+@font-face {
+  font-family: "Inter";
+  font-style: normal;
+  font-weight: 900;
+  font-display: swap;
+  src: url("/assets/fonts/Inter-Black.woff2?v=3.13") format("woff2"),
+    url("/assets/fonts/Inter-Black.woff?v=3.13") format("woff");
+}
+
+@font-face {
+  font-family: "Inter";
+  font-style: italic;
+  font-weight: 900;
+  font-display: swap;
+  src: url("/assets/fonts/Inter-BlackItalic.woff2?v=3.13") format("woff2"),
+    url("/assets/fonts/Inter-BlackItalic.woff?v=3.13") format("woff");
+}
+
+@import "~ng-pick-datetime/assets/style/picker.min.css";
+
+.hover {
+  cursor: pointer;
+}
+
+.toast-center-center {
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.toast-top-center {
+  top: 0;
+  right: 0;
+  width: 100%;
+}
+
+.toast-bottom-center {
+  bottom: 0;
+  right: 0;
+  width: 100%;
+}
+
+.toast-top-full-width {
+  top: 0;
+  right: 0;
+  width: 100%;
+}
+
+.toast-bottom-full-width {
+  bottom: 0;
+  right: 0;
+  width: 100%;
+}
+
+.toast-top-left {
+  top: 12px;
+  left: 12px;
+}
+
+.toast-top-right {
+  top: 12px;
+  right: 12px;
+}
+
+.toast-bottom-right {
+  right: 12px;
+  bottom: 12px;
+}
+
+.toast-bottom-left {
+  bottom: 12px;
+  left: 12px;
+}
+
+/* toast styles */
+.toast-title {
+  font-weight: bold;
+}
+
+.toast-message {
+  word-wrap: break-word;
+}
+
+.toast-message a,
+.toast-message label {
+  color: #ffffff;
+}
+
+.toast-message a:hover {
+  color: #cccccc;
+  text-decoration: none;
+}
+
+.toast-close-button {
+  position: relative;
+  right: -0.3em;
+  top: -0.3em;
+  float: right;
+  font-size: 20px;
+  font-weight: bold;
+  color: #ffffff;
+  text-shadow: 0 1px 0 #ffffff;
+  /* opacity: 0.8; */
+}
+
+.toast-close-button:hover,
+.toast-close-button:focus {
+  color: #000000;
+  text-decoration: none;
+  cursor: pointer;
+  opacity: 0.4;
+}
+
+/*Additional properties for button version
+ iOS requires the button element instead of an anchor tag.
+ If you want the anchor version, it requires `href="#"`.*/
+button.toast-close-button {
+  padding: 0;
+  cursor: pointer;
+  background: transparent;
+  border: 0;
+}
+
+.toast-container {
+  pointer-events: none;
+  position: fixed;
+  z-index: 99999009999;
+}
+
+.toast-container * {
+  box-sizing: border-box;
+}
+
+.toast-container .ngx-toastr {
+  position: relative;
+  overflow: hidden;
+  margin: 0 0 6px;
+  padding: 15px 15px 15px 50px;
+  width: 300px;
+  border-radius: 3px 3px 3px 3px;
+  background-position: 15px center;
+  background-repeat: no-repeat;
+  background-size: 24px;
+  box-shadow: 0 0 12px #999999;
+  color: #ffffff;
+}
+
+.toast-container .ngx-toastr:hover {
+  box-shadow: 0 0 12px #000000;
+  opacity: 1;
+  cursor: pointer;
+}
+
+.toast-container.toast-top-center .ngx-toastr,
+.toast-container.toast-bottom-center .ngx-toastr {
+  width: 300px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.toast-container.toast-top-full-width .ngx-toastr,
+.toast-container.toast-bottom-full-width .ngx-toastr {
+  width: 96%;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.toast-container .ngx-toastr {
+  background-color: #030303;
+  pointer-events: auto;
+  border-radius: 6px;
+  border-bottom-right-radius: 0;
+  border-bottom-left-radius: 0;
+  padding-left: 18px;
+  padding-top: 13px;
+}
+
+.toast-success {
+  background: #12b886 !important;
+}
+
+.toast-error {
+  background: #c2255c !important;
+}
+
+.toast-info {
+  background: #1c7cd6 !important;
+}
+
+.toast-warning {
+  background: #212529 !important;
+}
+
+.toast-progress {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  height: 4px;
+  background-color: #000000;
+  opacity: 0.4;
+}
+
+/* Responsive Design */
+@media all and (max-width: 240px) {
+  .toast-container .ngx-toastr.div {
+    padding: 8px 8px 8px 50px;
+    width: 11em;
+  }
+
+  .toast-container .toast-close-button {
+    right: -0.2em;
+    top: -0.2em;
+  }
+}
+
+@media all and (min-width: 241px) and (max-width: 480px) {
+  .toast-container .ngx-toastr.div {
+    padding: 8px 8px 8px 50px;
+    width: 18em;
+  }
+
+  .toast-container .toast-close-button {
+    right: -0.2em;
+    top: -0.2em;
+  }
+}
+
+@media all and (min-width: 481px) and (max-width: 768px) {
+  .toast-container .ngx-toastr.div {
+    padding: 15px 15px 15px 50px;
+    width: 25em;
+  }
+}
+
+body {
+  background-color: #343a40;
+  padding: 0;
+  margin: 0;
+  font-family: "Inter";
+  -webkit-touch-callout: none;
+  /* iOS Safari */
+  -webkit-user-select: none;
+  /* Safari */
+  -khtml-user-select: none;
+  /* Konqueror HTML */
+  -moz-user-select: none;
+  /* Old versions of Firefox */
+  -ms-user-select: none;
+  /* Internet Explorer/Edge */
+  user-select: none;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+img {
+  max-width: 100%;
+}
+
+button,
+input,
+select {
+  &:hover,
+  &:active,
+  &:focus {
+    outline: none;
+  }
+}
+
+.page {
+  color: #fff;
+  height: 100%;
+  overflow: auto;
+  padding: 62px 16px 16px 16px;
+}
+
+.gu-mirror {
+  position: fixed !important;
+  margin: 0 !important;
+  z-index: 9999 !important;
+  opacity: 0.8;
+  -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=80)";
+  filter: alpha(opacity=80);
+  pointer-events: none;
+  width: 100%;
+  height: 24px;
+  border-radius: 0;
+  background-color: #ffffff;
+  display: table;
+  font-size: 12px;
+  font-weight: normal;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: 1.5;
+  letter-spacing: normal;
+  color: #0b0d0e;
+  padding: 3px 8px;
+  margin-bottom: 1px;
+  border-radius: 6px;
+
+  .number {
+    display: table-cell;
+    vertical-align: top;
+    font-weight: bold;
+  }
+
+  .name {
+    display: table-cell;
+    vertical-align: top;
+  }
+
+  .post {
+    display: table-cell;
+    vertical-align: top;
+    text-align: right;
+    font-weight: bold;
+  }
+}
+
+.gu-hide {
+  left: -9999px !important;
+}
+
+.gu-unselectable {
+  -webkit-user-select: none !important;
+  -moz-user-select: none !important;
+  -ms-user-select: none !important;
+  user-select: none !important;
+}
+
+.gu-transit {
+  opacity: 0.2;
+  -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=20)";
+  filter: alpha(opacity=20);
+}
+
+.page-heading {
+  margin-top: 46px;
+  height: 120px;
+  background-color: #343a40;
+  position: relative;
+  padding: 0 16px;
+
+  h1 {
+    font-size: 24px;
+    font-weight: bold;
+    font-stretch: normal;
+    font-style: normal;
+    line-height: 1.33;
+    letter-spacing: normal;
+    color: #ffffff;
+    margin: 0;
+    padding-top: 42px;
+    float: left;
+  }
+
+  button {
+    width: 150px;
+    height: auto;
+    border-radius: 6px;
+    background-image: linear-gradient(to bottom, #20c997, #12b886);
+    font-size: 12px;
+    font-weight: bold;
+    font-stretch: normal;
+    font-style: normal;
+    line-height: 1.5;
+    letter-spacing: normal;
+    text-align: center;
+    color: #ffffff;
+    border: 0;
+    cursor: pointer;
+    float: right;
+    margin: 0 8px;
+    padding: 5px;
+    margin-top: 30px;
+    &:hover,
+    &:active,
+    &:focus {
+      background-image: linear-gradient(to bottom, #3de0b0, #12b886);
+    }
+  }
+
+  select {
+    float: right;
+    width: 164px;
+    height: 32px;
+    border-radius: 6px;
+    margin: 0 8px;
+    margin-top: 40px;
+    border: 0;
+    font-size: 12px;
+    font-weight: normal;
+    font-stretch: normal;
+    font-style: normal;
+    line-height: 1.5;
+    letter-spacing: normal;
+    color: #ffffff;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    text-indent: 1px;
+    text-overflow: "";
+    padding: 0 30px 0 10px;
+    background: url(/assets/image/arrow-down.svg) no-repeat #0b0d0e;
+    background-position: center right 10px;
+  }
+
+  select::-ms-expand {
+    display: none;
+  }
+
+  &::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 48px;
+    background-image: linear-gradient(to bottom, #343a40, #212529);
+  }
+}
+
+dp-day-calendar.date-picker {
+  dp-calendar-nav .dp-nav-header {
+    display: none;
+  }
+
+  .dp-day-calendar-container {
+    background-color: transparent;
+
+    .dp-calendar-nav-container-left {
+      float: left;
+    }
+
+    .dp-calendar-nav-container-right {
+      float: right;
+    }
+  }
+
+  .dp-nav-btns-container {
+    width: 100%;
+    position: initial;
+  }
+
+  .dp-next-month,
+  .dp-prev-month {
+    opacity: 0.4;
+  }
+
+  .dp-calendar-weekday {
+    text-transform: uppercase;
+    padding-top: 15px;
+  }
+
+  .dp-weekdays {
+    margin: 0;
+  }
+
+  .dp-calendar-weekday,
+  .dp-calendar-day {
+    background-color: transparent;
+    border: 0;
+    width: 48px;
+    height: 48px;
+    font-size: 10px;
+    font-weight: bold;
+    font-stretch: normal;
+    font-style: normal;
+    line-height: 1.6;
+    letter-spacing: normal;
+    text-align: center;
+    color: #ffffff;
+  }
+
+  .dp-calendar-wrapper {
+    border: 0;
+  }
+
+  .dp-current-day {
+    /*
+    position: relative;
+    background: url(/assets/image/selected_day_2.png) no-repeat;
+    background-size: 32px;
+    background-position: center;
+    */
+  }
+
+  .dp-calendar-nav-left {
+    width: 35px;
+    height: 35px;
+    background: url(/assets/image/arrow-circle-left.svg) no-repeat;
+    border: 0;
+    background-position: center;
+    background-size: 16px;
+  }
+
+  .dp-calendar-nav-right {
+    width: 35px;
+    height: 35px;
+    background: url(/assets/image/arrow-circle-right.svg) no-repeat;
+    border: 0;
+    background-position: center;
+    background-size: 16px;
+  }
+
+  .dp-calendar-nav-container {
+    border-bottom: 1px solid #212529;
+    margin-bottom: 50px;
+  }
+
+  .dp-selected {
+    position: relative;
+    background: url(/assets/image/selected_day.png) no-repeat;
+    background-size: 32px;
+    background-position: center;
+  }
+}
+
+.ngui-auto-complete-wrapper {
+  input {
+    width: 100%;
+    height: 32px;
+    border-radius: 6px;
+    border: solid 1px #adb5bd;
+    background-color: #ffffff;
+    padding: 0 8px;
+
+    &:disabled {
+      color: #868e96;
+      background-color: #f1f3f5;
+      border-color: #f1f3f5;
+    }
+  }
+}
+
+.ngui-auto-complete li.no-match-found {
+  display: none !important;
+}
+
+.ngui-auto-complete li {
+  border-radius: 0;
+  border: solid 1px #adb5bd !important;
+  font-size: 12px;
+  font-weight: normal;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: 1.5;
+  letter-spacing: normal;
+  color: #0b0d0e;
+  padding: 5px 8px !important;
+  cursor: pointer;
+  background-color: #fff;
+  border-right: 0 !important;
+  border-left: 0 !important;
+  border-bottom: 0 !important;
+
+  &:last-child {
+    border-bottom: 0 !important;
+  }
+
+  &:first-child {
+    border-top: 0 !important;
+  }
+
+  &:hover,
+  &:active,
+  &:focus {
+    background-color: #adb5bd !important;
+  }
+}
+
+/*
+.ngui-auto-complete ul {
+  border: 0 !important;
+  margin-top: -3px !important;
+  border-bottom: solid 1px #adb5bd !important;
+  border-bottom-left-radius: 6px;
+  border-bottom-right-radius: 6px;
+  height: 146px;
+  overflow: auto;
+  background-color: #fff !important;
+  min-width: 280px;
+}
+*/
+
+.ngui-auto-complete ul {
+  max-height: 200px;
+  overflow-y: auto;
+  border: 0 !important;
+  border: solid 1px #adb5bd !important;
+  border-radius: 6px;
+}
+
+.type-supervize {
+  .container.canvas {
+    .close {
+      top: 474px !important;
+    }
+  }
+}
+
+@import "~@ng-select/ng-select/themes/default.theme.css";
+
+.ng-select .ng-select-container {
+  height: 32px;
+  border-radius: 6px;
+  border: solid 1px #adb5bd !important;
+  background-color: #ffffff;
+  box-shadow: none !important;
+}
+
+.ng-select-item {
+  font-size: 12px;
+  color: #0b0d0e;
+  width: 100%;
+  table-layout: fixed;
+
+  .jersey {
+    color: #637680;
+    width: 29px;
+    display: inline-block;
+    padding-left: 3px;
+  }
+
+  .position {
+    float: right;
+    border: 1px solid #1c7cd6;
+    color: #1c7cd6;
+    text-align: center;
+    border-radius: 100%;
+    font-size: 8px;
+    padding-top: 2px;
+    width: 16px;
+    height: 16px;
+  }
+}
+
+.ng-dropdown-panel .ng-dropdown-panel-items .ng-option {
+  font-size: 12px !important;
+}
+
+.ng-dropdown-panel .ng-dropdown-panel-items {
+  max-height: 168px !important;
+}
+
+.disabled-watch {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: #000000d1;
+  z-index: 1000000000;
+  text-align: center;
+  padding-top: 130px;
+  h3 {
+    color: #fff;
+  }
+  button {
+    width: 132px;
+    height: 32px;
+    border-radius: 6px;
+    background-image: linear-gradient(to bottom, #20c997, #12b886);
+    font-size: 12px;
+    font-weight: bold;
+    font-stretch: normal;
+    font-style: normal;
+    line-height: 1.5;
+    letter-spacing: normal;
+    text-align: center;
+    color: #ffffff;
+    border: 0;
+    cursor: pointer;
+
+    &:hover,
+    &:active,
+    &:focus {
+      background-image: linear-gradient(to bottom, #3de0b0, #12b886);
+    }
+  }
+}
+
+.modal {
+  position: fixed;
+  z-index: 1;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgb(0, 0, 0);
+  background-color: rgba(0, 0, 0, 0.76);
+  z-index: 12121212121;
+}
+
+.modal-content {
+  background-color: #343a40;
+  margin: 15% auto;
+  padding: 20px;
+  width: 400px;
+  max-width: 100%;
+  color: #fff;
+  .match-box {
+    border-bottom: 1px solid #63676b;
+    padding-bottom: 10px;
+    margin-bottom: 10px;
+    &:last-child {
+      border-bottom: 0;
+    }
+    .round {
+      font-size: 10px;
+      font-weight: bold;
+      font-stretch: normal;
+      font-style: normal;
+      line-height: 1.6;
+      letter-spacing: normal;
+      text-align: left;
+      color: #868e96;
+    }
+
+    .team {
+      font-size: 14px;
+      font-weight: bold;
+      font-stretch: normal;
+      font-style: normal;
+      line-height: 1.4;
+      letter-spacing: normal;
+      text-align: left;
+      color: #ffffff;
+    }
+
+    button {
+      border-radius: 6px;
+      background-image: linear-gradient(to bottom, #20c997, #12b886);
+      font-size: 12px;
+      font-weight: bold;
+      font-stretch: normal;
+      font-style: normal;
+      line-height: 1.5;
+      letter-spacing: normal;
+      text-align: center;
+      color: #ffffff;
+      border: 0;
+      cursor: pointer;
+
+      &:hover,
+      &:active,
+      &:focus {
+        background-image: linear-gradient(to bottom, #3de0b0, #12b886);
+      }
+    }
+  }
+}
+
+.close {
+  color: #aaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+  color: black;
+  text-decoration: none;
+  cursor: pointer;
+}

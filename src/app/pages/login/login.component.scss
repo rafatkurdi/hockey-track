@@ -1,0 +1,112 @@
+.page.login {
+  min-height: 100vh;
+  padding-top: 0;
+  position: relative;
+
+  &::after {
+    display: block;
+    content: "";
+    width: 1432px;
+    height: 642px;
+    background: url(/assets/image/hriste-motiv.png) no-repeat;
+    position: absolute;
+    right: 0;
+    top: 0;
+    background-size: cover;
+    background-position: center bottom;
+    z-index: -1;
+  }
+
+  .login-box {
+    width: 400px;
+    max-width: 100%;
+    margin: 0 auto;
+    padding-top: 100px;
+
+    .logo {
+      text-align: center;
+      margin-bottom: 16px;
+    }
+
+    .version {
+      font-size: 12px;
+      font-weight: normal;
+      font-stretch: normal;
+      font-style: normal;
+      line-height: 1.5;
+      letter-spacing: normal;
+      text-align: center;
+      color: #868e96;
+    }
+
+    .login-form {
+      margin-top: 32px;
+
+      .username,
+      .password {
+        width: 100%;
+        height: 48px;
+        border-radius: 6px;
+        background-color: #ffffff;
+        font-size: 14px;
+        font-weight: normal;
+        font-stretch: normal;
+        font-style: normal;
+        line-height: 1.57;
+        letter-spacing: normal;
+        color: #868e96;
+        margin-bottom: 16px;
+        padding: 0 16px;
+        border: 0;
+
+        &:hover,
+        &:active,
+        &:focus {
+          outline: none;
+        }
+      }
+
+      .submit {
+        width: 100%;
+        height: 48px;
+        border-radius: 6px;
+        background-image: linear-gradient(to bottom, #20c997, #12b886);
+        font-size: 14px;
+        font-weight: bold;
+        font-stretch: normal;
+        font-style: normal;
+        line-height: 1.29;
+        letter-spacing: normal;
+        text-align: center;
+        color: #ffffff;
+        border: 0;
+        cursor: pointer;
+
+        &:hover,
+        &:active,
+        &:focus {
+          background-image: linear-gradient(to bottom, #3de0b0, #12b886);
+          outline: none;
+        }
+      }
+    }
+
+  }
+
+  .copyright {
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    text-align: center;
+    font-size: 12px;
+    font-weight: normal;
+    font-stretch: normal;
+    font-style: normal;
+    line-height: 1.5;
+    letter-spacing: normal;
+    text-align: center;
+    color: #868e96;
+    padding-bottom: 64px;
+  }
+}

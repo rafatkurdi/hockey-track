@@ -1,0 +1,1 @@
+export const environment = { production: true, version:"3.5.2022  11:28:13" };

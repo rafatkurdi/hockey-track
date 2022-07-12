@@ -1,0 +1,1172 @@
+<!--
+<app-nav></app-nav>
+-->
+<div class="disabled-watch" *ngIf="disabledWatch">
+  <h3>Sběr dat u tohoto zápasu byl ukončen. Vraťte se na výpis zápasů.</h3>
+  <button (click)="goToSelect()">Výpis zápasů</button>
+</div>
+<div class="page tracking type-{{ page_type }}" *ngIf="loaded">
+  <div class="container main">
+    <div class="match-info">
+      <div class="team team-left" *ngIf="!reversed_sides">
+        <div class="logo">
+          <img
+            src="/assets/image/logos/{{ game.gameData.homeTeam.shortcut }}.png"
+            onerror="this.src='/assets/image/logos/default.png';"
+          />
+        </div>
+        <div class="name">{{ game.gameData.homeTeam.name }}</div>
+      </div>
+      <div class="team team-left" *ngIf="reversed_sides">
+        <div class="logo">
+          <img
+            src="/assets/image/logos/{{ game.gameData.awayTeam.shortcut }}.png"
+            onerror="this.src='/assets/image/logos/default.png';"
+          />
+        </div>
+        <div class="name">{{ game.gameData.awayTeam.name }}</div>
+      </div>
+
+      <div class="settings">
+        <!--<div class="date">{{game.gameData.competition.league}} ･ {{game.gameData.date | date:'dd.MM.yyyy'}} ･
+          {{game.gameData.competition.round}}. kolo</div>-->
+        <div class="buttons">
+          <button class="btn-control" routerLink="/select">
+            <img src="/assets/image/hockey-sticks-white.svg" />
+          </button>
+          <div class="button-box">
+            <button class="switch" (click)="changeSides()">
+              Změnit strany <img src="/assets/image/switch-side.svg" />
+            </button>
+            <!-- <button>
+
+            </button> -->
+          </div>
+          <div class="button-box number-box">
+            <button class="minus" (click)="minusPeriod()">
+              <img src="/assets/image/minus-circle.svg" />
+            </button>
+            <div class="mask"></div>
+            <input
+              type="text"
+              class="number"
+              value="{{ formatPeriod(period) }}"
+            />
+            <button class="plus" (click)="plusPeriod()">
+              <img src="/assets/image/plus-circle.svg" />
+            </button>
+          </div>
+          <div class="button-box number-box">
+            <button class="minus" (click)="minusMinute()">
+              <img src="/assets/image/minus-circle.svg" />
+            </button>
+            <input
+              type="number"
+              class="number"
+              [(ngModel)]="minute"
+              min="0"
+              max="20"
+              onClick="this.select();"
+              (ngModelChange)="loadPlayersOnIce(false)"
+            />
+            <!--(ngModelChange)="checkMinuteChange(minute)"-->
+            <button class="plus" (click)="plusMinute()">
+              <img src="/assets/image/plus-circle.svg" />
+            </button>
+          </div>
+          <div class="button-box number-box">
+            <button class="minus" (click)="minusSecond()">
+              <img src="/assets/image/minus-circle.svg" />
+            </button>
+            <input
+              type="number"
+              class="number"
+              [(ngModel)]="second"
+              min="0"
+              max="59"
+              onClick="this.select();"
+              (ngModelChange)="loadPlayersOnIce(false)"
+            />
+            <!--(ngModelChange)="checkSecondChange(second)"-->
+            <button class="plus" (click)="plusSecond()">
+              <img src="/assets/image/plus-circle.svg" />
+            </button>
+          </div>
+          <button class="btn-control" (click)="logout()">
+            <img src="/assets/image/logout.svg" />
+          </button>
+        </div>
+      </div>
+      <div class="team team-right" *ngIf="!reversed_sides">
+        <div class="logo">
+          <img
+            src="/assets/image/logos/{{ game.gameData.awayTeam.shortcut }}.png"
+            onerror="this.src='/assets/image/logos/default.png';"
+          />
+        </div>
+        <div class="name">{{ game.gameData.awayTeam.name }}</div>
+      </div>
+      <div class="team team-right" *ngIf="reversed_sides">
+        <div class="logo">
+          <img
+            src="/assets/image/logos/{{ game.gameData.homeTeam.shortcut }}.png"
+            onerror="this.src='/assets/image/logos/default.png';"
+          />
+        </div>
+        <div class="name">{{ game.gameData.homeTeam.name }}</div>
+      </div>
+    </div>
+    <div class="tracking-box" [class.reversed]="reversed_sides">
+      <div class="roster home" *ngIf="!reversed_sides">
+        <div class="left-box">
+          <div
+            class="box backward"
+            dragula="DRAGULA_1"
+            [(dragulaModel)]="dragula_1"
+            (dragulaModelChange)="dragula_1 = $event"
+          >
+            <div
+              class="player"
+              *ngFor="let player of getRoster('home', 'backward')"
+              (click)="selectPlayer(player.id)"
+              [class.green]="checkPlayerOnIce(player.id)"
+            >
+              <div class="number">{{ player.jersey }}</div>
+              <div class="name">{{ player.surname }}</div>
+              <div class="post">{{ formatStick(player) }}</div>
+            </div>
+          </div>
+          <div
+            class="box goalkeeper"
+            dragula="DRAGULA_2"
+            [(dragulaModel)]="dragula_2"
+            (dragulaModelChange)="dragula_2 = $event"
+          >
+            <div
+              class="player"
+              *ngFor="let player of getRoster('home', 'goalkeeper')"
+              (click)="selectPlayer(player.id)"
+              [class.green]="checkPlayerOnIce(player.id)"
+            >
+              <div class="number">{{ player.jersey }}</div>
+              <div class="name">{{ player.surname }}</div>
+              <div class="post">{{ formatStick(player) }}</div>
+            </div>
+          </div>
+        </div>
+        <div class="right-box">
+          <div
+            class="box forward"
+            dragula="DRAGULA_3"
+            [(dragulaModel)]="dragula_3"
+            (dragulaModelChange)="dragula_3 = $event"
+          >
+            <div
+              class="player"
+              *ngFor="let player of getRoster('home', 'forward')"
+              (click)="selectPlayer(player.id)"
+              [class.green]="checkPlayerOnIce(player.id)"
+            >
+              <div class="number">{{ player.jersey }}</div>
+              <div class="name">{{ player.surname }}</div>
+              <div class="post">{{ formatStick(player) }}</div>
+            </div>
+          </div>
+
+          <div class="new-record" *ngIf="page_type == 'supervize'">
+            <button class="new-record-btn" (click)="toggleNewEvent()">
+              Nový záznam
+            </button>
+          </div>
+        </div>
+      </div>
+      <div class="roster away" *ngIf="reversed_sides">
+        <div class="left-box">
+          <div
+            class="box forward"
+            dragula="DRAGULA_11"
+            [(dragulaModel)]="dragula_11"
+            (dragulaModelChange)="dragula_11 = $event"
+          >
+            <div
+              class="player"
+              *ngFor="let player of getRoster('away', 'forward')"
+              (click)="selectPlayer(player.id)"
+              [class.green]="checkPlayerOnIce(player.id)"
+            >
+              <div class="number">{{ player.jersey }}</div>
+              <div class="name">{{ player.surname }}</div>
+              <div class="post">{{ formatStick(player) }}</div>
+            </div>
+          </div>
+          <!--
+          <div class="cameras" *ngIf="page_type=='supervize'">
+            <button class="camera-btn" [class.active]="enabled_camera==1" (click)="enabled_camera=1">Kamera 1</button>
+            <button class="camera-btn" [class.active]="enabled_camera==2" (click)="enabled_camera=2">Kamera 2</button>
+            <button class="camera-btn" [class.active]="enabled_camera==3" (click)="enabled_camera=3">Kamera 3</button>
+          </div>
+          -->
+        </div>
+        <div class="right-box">
+          <div
+            class="box backward"
+            dragula="DRAGULA_21"
+            [(dragulaModel)]="dragula_21"
+            (dragulaModelChange)="dragula_21 = $event"
+          >
+            <div
+              class="player"
+              *ngFor="let player of getRoster('away', 'backward')"
+              (click)="selectPlayer(player.id)"
+              [class.green]="checkPlayerOnIce(player.id)"
+            >
+              <div class="number">{{ player.jersey }}</div>
+              <div class="name">{{ player.surname }}</div>
+              <div class="post">{{ formatStick(player) }}</div>
+            </div>
+          </div>
+          <div
+            class="box goalkeeper"
+            dragula="DRAGULA_31"
+            [(dragulaModel)]="dragula_31"
+            (dragulaModelChange)="dragula_31 = $event"
+          >
+            <div
+              class="player"
+              *ngFor="let player of getRoster('away', 'goalkeeper')"
+              (click)="selectPlayer(player.id)"
+              [class.green]="checkPlayerOnIce(player.id)"
+            >
+              <div class="number">{{ player.jersey }}</div>
+              <div class="name">{{ player.surname }}</div>
+              <div class="post">{{ formatStick(player) }}</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div
+        class="playground"
+        [class.disabled-playground]="show_faceOff"
+        *ngIf="page_type == 'tracking'"
+      >
+        <div class="playground-inner" (click)="onMapClick($event)">
+          <div class="coordinates-inner">
+            <div
+              class="coordinates"
+              *ngIf="show_coordinates"
+              [ngStyle]="{ 'left.px': x, 'top.px': y }"
+            ></div>
+          </div>
+          <img src="/assets/image/hriste_760x380.svg" />
+          <!--
+          <div class="home-logo"><img src="/assets/image/logos/{{game.gameData.homeTeam.shortcut}}.png"
+              onerror="this.src='/assets/image/logos/default.png';"></div>
+          <div class="away-logo"><img src="/assets/image/logos/{{game.gameData.awayTeam.shortcut}}.png"
+              onerror="this.src='/assets/image/logos/default.png';"></div>
+          -->
+          <div class="home-shortcut">{{ game.gameData.homeTeam.shortcut }}</div>
+          <div class="away-shortcut">{{ game.gameData.awayTeam.shortcut }}</div>
+
+          <div class="coordinates-test" *ngIf="test_x != null">
+            {{ test_x }};{{ test_y }}
+          </div>
+        </div>
+      </div>
+      <div class="video-player" *ngIf="page_type == 'supervize'">
+        <div class="video-player-inner">
+          <div class="camera-1" *ngIf="enabled_camera == 1">
+            <iframe
+              width="700"
+              height="388"
+              [src]="videoUrl"
+              frameborder="0"
+              allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
+              allowfullscreen
+              *ngIf="videoId != null"
+            ></iframe>
+          </div>
+          <!--
+            {{matchData.videoId}}
+          <div class="camera-2" *ngIf="enabled_camera==2">
+            <iframe width="100%" height="388" src="https://www.youtube.com/embed/xEoMC7czIxA" frameborder="0"
+              allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+          </div>
+          <div class="camera-3" *ngIf="enabled_camera==3">
+            <iframe width="100%" height="388" src="https://www.youtube.com/embed/hrHPrrAiNgU" frameborder="0"
+              allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+          </div>
+          -->
+        </div>
+      </div>
+
+      <div class="roster away" *ngIf="!reversed_sides">
+        <div class="left-box">
+          <div
+            class="box forward"
+            dragula="DRAGULA_11"
+            [(dragulaModel)]="dragula_11"
+            (dragulaModelChange)="dragula_11 = $event"
+          >
+            <div
+              class="player"
+              *ngFor="let player of getRoster('away', 'forward')"
+              (click)="selectPlayer(player.id)"
+              [class.green]="checkPlayerOnIce(player.id)"
+            >
+              <div class="number">{{ player.jersey }}</div>
+              <div class="name">{{ player.surname }}</div>
+              <div class="post">{{ formatStick(player) }}</div>
+            </div>
+          </div>
+          <!--
+          <div class="cameras" *ngIf="page_type=='supervize'">
+            <button class="camera-btn" [class.active]="enabled_camera==1" (click)="enabled_camera=1">Kamera 1</button>
+            <button class="camera-btn" [class.active]="enabled_camera==2" (click)="enabled_camera=2">Kamera 2</button>
+            <button class="camera-btn" [class.active]="enabled_camera==3" (click)="enabled_camera=3">Kamera 3</button>
+          </div>
+          -->
+        </div>
+        <div class="right-box">
+          <div
+            class="box backward"
+            dragula="DRAGULA_21"
+            [(dragulaModel)]="dragula_21"
+            (dragulaModelChange)="dragula_21 = $event"
+          >
+            <div
+              class="player"
+              *ngFor="let player of getRoster('away', 'backward')"
+              (click)="selectPlayer(player.id)"
+              [class.green]="checkPlayerOnIce(player.id)"
+            >
+              <div class="number">{{ player.jersey }}</div>
+              <div class="name">{{ player.surname }}</div>
+              <div class="post">{{ formatStick(player) }}</div>
+            </div>
+          </div>
+          <div
+            class="box goalkeeper"
+            dragula="DRAGULA_31"
+            [(dragulaModel)]="dragula_31"
+            (dragulaModelChange)="dragula_31 = $event"
+          >
+            <div
+              class="player"
+              *ngFor="let player of getRoster('away', 'goalkeeper')"
+              (click)="selectPlayer(player.id)"
+              [class.green]="checkPlayerOnIce(player.id)"
+            >
+              <div class="number">{{ player.jersey }}</div>
+              <div class="name">{{ player.surname }}</div>
+              <div class="post">{{ formatStick(player) }}</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="roster home" *ngIf="reversed_sides">
+        <div class="left-box">
+          <div
+            class="box backward"
+            dragula="DRAGULA_1"
+            [(dragulaModel)]="dragula_11"
+            (dragulaModelChange)="dragula_11 = $event"
+          >
+            <div
+              class="player"
+              *ngFor="let player of getRoster('home', 'backward')"
+              (click)="selectPlayer(player.id)"
+              [class.green]="checkPlayerOnIce(player.id)"
+            >
+              <div class="number">{{ player.jersey }}</div>
+              <div class="name">{{ player.surname }}</div>
+              <div class="post">{{ formatStick(player) }}</div>
+            </div>
+          </div>
+          <div
+            class="box goalkeeper"
+            dragula="DRAGULA_2"
+            [(dragulaModel)]="dragula_22"
+            (dragulaModelChange)="dragula_22 = $event"
+          >
+            <div
+              class="player"
+              *ngFor="let player of getRoster('home', 'goalkeeper')"
+              (click)="selectPlayer(player.id)"
+              [class.green]="checkPlayerOnIce(player.id)"
+            >
+              <div class="number">{{ player.jersey }}</div>
+              <div class="name">{{ player.surname }}</div>
+              <div class="post">{{ formatStick(player) }}</div>
+            </div>
+          </div>
+        </div>
+        <div class="right-box">
+          <div
+            class="box forward"
+            dragula="DRAGULA_3"
+            [(dragulaModel)]="dragula_33"
+            (dragulaModelChange)="dragula_33 = $event"
+          >
+            <div
+              class="player"
+              *ngFor="let player of getRoster('home', 'forward')"
+              (click)="selectPlayer(player.id)"
+              [class.green]="checkPlayerOnIce(player.id)"
+            >
+              <div class="number">{{ player.jersey }}</div>
+              <div class="name">{{ player.surname }}</div>
+              <div class="post">{{ formatStick(player) }}</div>
+            </div>
+          </div>
+
+          <div class="new-record" *ngIf="page_type == 'supervize'">
+            <button class="new-record-btn" (click)="toggleNewEvent()">
+              Nový záznam
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div
+      class="tracking-nav"
+      [class.hidden]="page_type != 'tracking'"
+      [class.show]="toggle_adding_nav"
+      *ngIf="
+        !show_faceOff &&
+        !show_shot &&
+        !show_zoneEntry &&
+        !show_hit &&
+        !show_dumpIn &&
+        !show_zoneExit &&
+        !show_dumpOut &&
+        !show_offensiveZoneLoss &&
+        !show_shootout &&
+        !show_penalty
+      "
+    >
+      <div class="box">
+        <button
+          [class.active]="show_faceOff"
+          (click)="toggleCanvas('faceOff', false)"
+        >
+          <div class="char"><img src="/assets/image/alphabet/b.svg" /></div>
+          <div class="nav-text">Vhazování</div>
+        </button>
+      </div>
+      <div class="box">
+        <button
+          [class.active]="show_shot"
+          (click)="toggleCanvas('shot', false)"
+        >
+          <div class="char"><img src="/assets/image/alphabet/s.svg" /></div>
+          <div class="nav-text">Střela</div>
+        </button>
+      </div>
+      <div class="box">
+        <button
+          [class.active]="show_zoneEntry"
+          (click)="toggleCanvas('zoneEntry', false)"
+        >
+          <div class="char"><img src="/assets/image/alphabet/d.svg" /></div>
+          <div class="nav-text">Vstup do pásma</div>
+        </button>
+      </div>
+      <div class="box">
+        <button
+          [class.active]="show_dumpIn"
+          (click)="toggleCanvas('dumpIn', false)"
+        >
+          <div class="char"><img src="/assets/image/alphabet/n.svg" /></div>
+          <div class="nav-text">Nahození</div>
+        </button>
+      </div>
+      <div class="box">
+        <button
+          [class.active]="show_zoneExit"
+          (click)="toggleCanvas('zoneExit', false)"
+        >
+          <div class="char"><img src="/assets/image/alphabet/z.svg" /></div>
+          <div class="nav-text">Výstup z pásma</div>
+        </button>
+      </div>
+      <div class="box">
+        <button
+          [class.active]="show_dumpOut"
+          (click)="toggleCanvas('dumpOut', false)"
+        >
+          <div class="char"><img src="/assets/image/alphabet/v.svg" /></div>
+          <div class="nav-text">Vyhození</div>
+        </button>
+      </div>
+      <!--
+      <div class="box">
+        <button [class.active]="show_offensiveZoneLoss" (click)="toggleCanvas('offensiveZoneLoss',false)">
+          <div class="char"><img src="/assets/image/alphabet/u.svg"></div>
+          <div class="nav-text">Ztráta út. pásma</div>
+        </button>
+      </div>
+      -->
+      <div class="box">
+        <button
+          [class.active]="show_shootout"
+          (click)="toggleCanvas('shootout', false)"
+        >
+          <div class="char"><img src="/assets/image/alphabet/t.svg" /></div>
+          <div class="nav-text">Nájezdy</div>
+        </button>
+      </div>
+
+      <div class="box">
+        <button
+          [class.active]="show_penalty"
+          (click)="toggleCanvas('penalty', false)"
+        >
+          <div class="char"><img src="/assets/image/alphabet/p.svg" /></div>
+          <div class="nav-text">Vyloučení</div>
+        </button>
+      </div>
+
+      <!--
+      <div class="box">
+        <button [class.active]="show_hit" (click)="toggleCanvas('hit',false)">
+          <div class="char"><img src="/assets/image/alphabet/t.svg"></div>
+          <div class="nav-text">Hit</div>
+        </button>
+      </div>
+      -->
+    </div>
+
+    <div
+      class="tracking-selects"
+      *ngIf="
+        !show_faceOff &&
+        !show_shot &&
+        !show_zoneEntry &&
+        !show_dumpIn &&
+        !show_zoneExit &&
+        !show_dumpOut &&
+        !show_offensiveZoneLoss &&
+        !show_hit &&
+        !show_shootout &&
+        !show_penalty
+      "
+    >
+      <button
+        *ngIf="page_type == 'supervize'"
+        class="supervize-toggler"
+        [class.active]="filter_supervize"
+        (click)="toggleFilterSupervize()"
+      >
+        Supervize
+      </button>
+
+      <button
+        *ngIf="page_type == 'tracking'"
+        class="supervize-toggler"
+        (click)="loadEventFlow(id)"
+      >
+        Reload
+      </button>
+
+      <select [(ngModel)]="filter_period" (change)="filterEventflow()" class="select-default-width">
+        <option value="1">1. třetina</option>
+        <option value="2">2. třetina</option>
+        <option value="3">3. třetina</option>
+        <option value="4">prod.</option>
+        <option value="5">prod.2</option>
+        <option value="6">prod.3</option>
+        <option value="0">Nájezdy</option>
+      </select>
+      <select [(ngModel)]="filter_post" (change)="filterEventflow()" class="select-default-width">
+        <option value="all">Všichni hráči</option>
+        <option value="forwards">Útočníci</option>
+        <option value="backwards">Obránci</option>
+      </select>
+      <select [(ngModel)]="filter_events" (change)="filterEventflow()" class="select-default-width">
+        <option value="all">Všechny události</option>
+        <option disabled>---------</option>
+        <option value="segment1">1. Segment</option>
+        <option value="segment2">2. Segment</option>
+        <option disabled>---------</option>
+        <option value="{{ event }}" *ngFor="let event of event_list">
+          {{ getEventType(event) }}
+        </option>
+      </select>
+      <select [(ngModel)]="filter_team" (change)="filterEventflow()" class="select-default-width">
+        <option value="all">Oba týmy</option>
+        <option value="home">{{ game.gameData.homeTeam.name }}</option>
+        <option value="away">{{ game.gameData.awayTeam.name }}</option>
+      </select>
+      <select [(ngModel)]="filterErrorTypes" (change)="filterEventflow()" class="select-errors-width">
+        <option value="noErrors">{{langData.error_select_default}}</option>
+        <option value="all">{{ langData.allErrors }}</option>
+        <option value="errors">{{ langData.errors }}</option>
+        <option value="warnings">{{ langData.warnings }}</option>
+      </select>
+
+      <div class="more-game-buttons" *ngIf="page_type == 'supervize'">
+        <button (click)="sync()">Synchronizovat</button>
+      </div>
+    </div>
+  </div>
+
+  <div
+    class="container canvas black"
+    [class.no-scroll]="eventflow_loading"
+    *ngIf="
+      !show_faceOff &&
+      !show_shot &&
+      !show_zoneEntry &&
+      !show_dumpIn &&
+      !show_zoneExit &&
+      !show_dumpOut &&
+      !show_offensiveZoneLoss &&
+      !show_hit &&
+      !show_shootout &&
+      !show_penalty
+    "
+  >
+    <loading-small *ngIf="eventflow_loading"></loading-small>
+    <table class="table-basic">
+      <tr>
+        <th>Třetina</th>
+        <th>Čas v zápase</th>
+        <th>Čas časomíry</th>
+        <th>Souřadnice</th>
+        <th>Typ akce</th>
+        <th>Hráč</th>
+        <th></th>
+      </tr>
+
+      <tr *ngFor="let event of render_eventflow">
+        <ng-container *ngIf="event.event == 'faceOff'">
+          <td>
+            <div class="td-inner">{{ getPeriod(event.eventTime) }}</div>
+          </td>
+          <td>
+            <div class="td-inner">{{ formatTime(event.eventTime) }}</div>
+          </td>
+          <td>
+            <div class="td-inner">{{ getCasomira(event.eventTime) }}</div>
+          </td>
+          <td>
+            <div class="td-inner">{{ event.location }}</div>
+          </td>
+          <td>
+            <div class="td-inner">{{ getEventType(event.event) }}</div>
+          </td>
+          <td>
+            <div class="td-inner">
+              {{ getPlayerInfo(event, "jersey") }}
+              {{ getPlayerInfo(event, "surname") }} ({{
+                getPlayerTeam(getPlayerInfo(event, "id"))
+              }})
+            </div>
+          </td>
+        </ng-container>
+
+        <ng-container *ngIf="event.event == 'shot'">
+          <td>
+            <div class="td-inner">{{ getPeriod(event.eventTime) }}</div>
+          </td>
+          <td>
+            <div class="td-inner">{{ formatTime(event.eventTime) }}</div>
+          </td>
+          <td>
+            <div class="td-inner">{{ getCasomira(event.eventTime) }}</div>
+          </td>
+          <td>
+            <div class="td-inner">
+              {{ event.coordinates.x }};{{ event.coordinates.y }}
+            </div>
+          </td>
+          <td>
+            <div class="td-inner">{{ getEventType(event.result) }}</div>
+          </td>
+          <td>
+            <div class="td-inner">
+              {{ getPlayerInfo(event, "jersey") }}
+              {{ getPlayerInfo(event, "surname") }} ({{
+                getPlayerTeam(getPlayerInfo(event, "id"))
+              }})
+            </div>
+          </td>
+        </ng-container>
+
+        <ng-container *ngIf="event.event == 'zoneEntry'">
+          <td>
+            <div class="td-inner">{{ getPeriod(event.eventTime) }}</div>
+          </td>
+          <td>
+            <div class="td-inner">{{ formatTime(event.eventTime) }}</div>
+          </td>
+          <td>
+            <div class="td-inner">{{ getCasomira(event.eventTime) }}</div>
+          </td>
+          <td>
+            <div class="td-inner">
+              {{ event.coordinates.x }};{{ event.coordinates.y }}
+            </div>
+          </td>
+          <td>
+            <div class="td-inner">{{ getEventType(event.event) }}</div>
+          </td>
+          <td>
+            <div class="td-inner">
+              {{ getPlayerInfo(event, "jersey") }}
+              {{ getPlayerInfo(event, "surname") }} ({{
+                getPlayerTeam(getPlayerInfo(event, "id"))
+              }})
+            </div>
+          </td>
+        </ng-container>
+
+        <ng-container *ngIf="event.event == 'hit'">
+          <td>
+            <div class="td-inner">{{ getPeriod(event.eventTime) }}</div>
+          </td>
+          <td>
+            <div class="td-inner">{{ formatTime(event.eventTime) }}</div>
+          </td>
+          <td>
+            <div class="td-inner">{{ getCasomira(event.eventTime) }}</div>
+          </td>
+          <td>
+            <div class="td-inner">
+              {{ event.coordinates.x }};{{ event.coordinates.y }}
+            </div>
+          </td>
+          <td>
+            <div class="td-inner">{{ getEventType(event.event) }}</div>
+          </td>
+          <td>
+            <div class="td-inner">
+              {{ getPlayerInfo(event, "jersey") }}
+              {{ getPlayerInfo(event, "surname") }} ({{
+                getPlayerTeam(getPlayerInfo(event, "id"))
+              }})
+            </div>
+          </td>
+        </ng-container>
+
+        <ng-container *ngIf="event.event == 'dumpIn'">
+          <td>
+            <div class="td-inner">{{ getPeriod(event.eventTime) }}</div>
+          </td>
+          <td>
+            <div class="td-inner">{{ formatTime(event.eventTime) }}</div>
+          </td>
+          <td>
+            <div class="td-inner">{{ getCasomira(event.eventTime) }}</div>
+          </td>
+          <td>
+            <div class="td-inner">
+              {{ event.coordinates.x }};{{ event.coordinates.y }}
+            </div>
+          </td>
+          <td>
+            <div class="td-inner">{{ getEventType(event.event) }}</div>
+          </td>
+          <td>
+            <div class="td-inner">
+              {{ getPlayerInfo(event, "jersey") }}
+              {{ getPlayerInfo(event, "surname") }} ({{
+                getPlayerTeam(getPlayerInfo(event, "id"))
+              }})
+            </div>
+          </td>
+        </ng-container>
+
+        <ng-container *ngIf="event.event == 'zoneExit'">
+          <td>
+            <div class="td-inner">{{ getPeriod(event.eventTime) }}</div>
+          </td>
+          <td>
+            <div class="td-inner">{{ formatTime(event.eventTime) }}</div>
+          </td>
+          <td>
+            <div class="td-inner">{{ getCasomira(event.eventTime) }}</div>
+          </td>
+          <td>
+            <div class="td-inner">
+              {{ event.coordinates.x }};{{ event.coordinates.y }}
+            </div>
+          </td>
+          <td>
+            <div class="td-inner">{{ getEventType(event.event) }}</div>
+          </td>
+          <td>
+            <div class="td-inner">
+              {{ getPlayerInfo(event, "jersey") }}
+              {{ getPlayerInfo(event, "surname") }} ({{
+                getPlayerTeam(getPlayerInfo(event, "id"))
+              }})
+            </div>
+          </td>
+        </ng-container>
+
+        <ng-container *ngIf="event.event == 'dumpOut'">
+          <td>
+            <div class="td-inner">{{ getPeriod(event.eventTime) }}</div>
+          </td>
+          <td>
+            <div class="td-inner">{{ formatTime(event.eventTime) }}</div>
+          </td>
+          <td>
+            <div class="td-inner">{{ getCasomira(event.eventTime) }}</div>
+          </td>
+          <td>
+            <div class="td-inner">
+              {{ event.coordinates.x }};{{ event.coordinates.y }}
+            </div>
+          </td>
+          <td>
+            <div class="td-inner">{{ getEventType(event.event) }}</div>
+          </td>
+          <td>
+            <div class="td-inner">
+              {{ getPlayerInfo(event, "jersey") }}
+              {{ getPlayerInfo(event, "surname") }} ({{
+                getPlayerTeam(getPlayerInfo(event, "id"))
+              }})
+            </div>
+          </td>
+        </ng-container>
+
+        <ng-container *ngIf="event.event == 'offensiveZoneLoss'">
+          <td>
+            <div class="td-inner">{{ getPeriod(event.eventTime) }}</div>
+          </td>
+          <td>
+            <div class="td-inner">{{ formatTime(event.eventTime) }}</div>
+          </td>
+          <td>
+            <div class="td-inner">{{ getCasomira(event.eventTime) }}</div>
+          </td>
+          <td>
+            <div class="td-inner">
+              {{ event.coordinates.x }};{{ event.coordinates.y }}
+            </div>
+          </td>
+          <td>
+            <div class="td-inner">{{ getEventType(event.event) }}</div>
+          </td>
+          <td>
+            <div class="td-inner">
+              {{ getPlayerInfo(event, "jersey") }}
+              {{ getPlayerInfo(event, "surname") }} ({{
+                getPlayerTeam(getPlayerInfo(event, "id"))
+              }})
+            </div>
+          </td>
+        </ng-container>
+
+        <ng-container *ngIf="event.event == 'shootout'">
+          <td>
+            <div class="td-inner">sn.</div>
+          </td>
+          <td>
+            <div class="td-inner">-</div>
+          </td>
+          <td>
+            <div class="td-inner">-</div>
+          </td>
+          <td>
+            <div class="td-inner">{{ event.gateZone }}</div>
+          </td>
+          <td>
+            <div class="td-inner">{{ getEventType(event.event) }}</div>
+          </td>
+          <td>
+            <div class="td-inner">
+              {{ getPlayerInfo(event, "jersey") }}
+              {{ getPlayerInfo(event, "surname") }} ({{
+                getPlayerTeam(getPlayerInfo(event, "id"))
+              }})
+            </div>
+          </td>
+        </ng-container>
+
+        <ng-container *ngIf="event.event == 'penalty'">
+          <td>
+            <div class="td-inner">{{ getPeriod(event.created) }}</div>
+          </td>
+          <td>
+            <div class="td-inner">{{ formatTime(event.created) }}</div>
+          </td>
+          <td>
+            <div class="td-inner">{{ getCasomira(event.created) }}</div>
+          </td>
+          <td>
+            <div class="td-inner">
+              {{ event.coordinates.x }};{{ event.coordinates.y }}
+            </div>
+          </td>
+          <td>
+            <div class="td-inner">{{ getEventType(event.event) }}</div>
+          </td>
+          <td>
+            <div class="td-inner">
+              {{ getPlayerInfo(event, "jersey") }}
+              {{ getPlayerInfo(event, "surname") }} ({{
+                getPlayerTeam(getPlayerInfo(event, "id"))
+              }})
+            </div>
+          </td>
+        </ng-container>
+
+        <td>
+          <button class="edit-btn" (click)="editEvent(event)">Editovat</button>
+          <button
+            class="pen-btn"
+            [disabled]="detectEdit(event.edition)"
+          ></button>
+          <button
+            id="info-btn"
+            [ngClass]="getInfoButtonClass(event)"
+            [disabled]="detectSupervision(event.supervision)"
+          ><span [ngClass]="{
+          'tooltip-window-warning':getInfoButtonClass(event) === 'warning-btn' && page_type == 'supervize',
+          'tooltip-window-error':getInfoButtonClass(event) === 'error-btn' && page_type == 'supervize',
+          'tooltip-window-info':getInfoButtonClass(event) === 'info-btn'}">
+            {{getInfoMessage(event)}}
+          </span>
+          </button>
+
+
+          <ng-container
+            *ngIf="
+              event.event == 'faceOff' ||
+              event.event == 'shot' ||
+              event.event == 'zoneEntry' ||
+              event.event == 'dumpIn' ||
+              event.event == 'zoneExit' ||
+              event.event == 'dumpOut' ||
+              event.event == 'offensiveZoneLoss' ||
+              event.event == 'hit'
+            "
+          >
+            <button class="remove-btn" (click)="removeEvent(event)"></button>
+          </ng-container>
+        </td>
+      </tr>
+    </table>
+  </div>
+
+  <faceOff-canvas
+    *ngIf="show_faceOff"
+    (closeCanvas)="close(undefined)"
+    [page_type]="page_type"
+    [roster_home]="roster_home"
+    [roster_away]="roster_away"
+    [period]="period"
+    [minute]="minute"
+    [second]="second"
+    [casomira]="getCasomiraSeconds()"
+    [editData]="editData"
+    [reversed_sides]="reversed_sides"
+    (toast)="toast($event)"
+    (changeCasomira)="changeCasomira($event)"
+    (reloadVideo)="openVideoTime($event)"
+    (saveType)="saveType($event)"
+    [homeShortcut]="game.gameData.homeTeam.shortcut"
+    [awayShortcut]="game.gameData.awayTeam.shortcut"
+  >
+  </faceOff-canvas>
+
+  <shot-canvas
+    *ngIf="show_shot"
+    (closeCanvas)="close(undefined)"
+    [page_type]="page_type"
+    [roster_home]="roster_home"
+    [roster_away]="roster_away"
+    [period]="period"
+    [minute]="minute"
+    [second]="second"
+    [casomira]="getCasomiraSeconds()"
+    [editData]="editData"
+    [reversed_sides]="reversed_sides"
+    (toast)="toast($event)"
+    (changeCasomira)="changeCasomira($event)"
+    [invalidCasomira]="invalidCasomira"
+    [activeFormation]="activeFormation"
+    (reloadVideo)="openVideoTime($event)"
+    (saveType)="saveType($event)"
+    [homeShortcut]="game.gameData.homeTeam.shortcut"
+    [awayShortcut]="game.gameData.awayTeam.shortcut"
+  >
+  </shot-canvas>
+
+  <zoneEntry-canvas
+    *ngIf="show_zoneEntry"
+    (closeCanvas)="close(undefined)"
+    [page_type]="page_type"
+    [roster_home]="roster_home"
+    [roster_away]="roster_away"
+    [period]="period"
+    [minute]="minute"
+    [second]="second"
+    [editData]="editData"
+    [reversed_sides]="reversed_sides"
+    [selected_x]="test_x"
+    [selected_y]="test_y"
+    (toast)="toast($event)"
+    (changeCasomira)="changeCasomira($event)"
+    (reloadVideo)="openVideoTime($event)"
+    (saveType)="saveType($event)"
+    [homeShortcut]="game.gameData.homeTeam.shortcut"
+    [awayShortcut]="game.gameData.awayTeam.shortcut"
+  >
+  </zoneEntry-canvas>
+
+  <dumpIn-canvas
+    *ngIf="show_dumpIn"
+    (closeCanvas)="close(undefined)"
+    [page_type]="page_type"
+    [roster_home]="roster_home"
+    [roster_away]="roster_away"
+    [period]="period"
+    [minute]="minute"
+    [second]="second"
+    [editData]="editData"
+    [reversed_sides]="reversed_sides"
+    [selected_x]="test_x"
+    [selected_y]="test_y"
+    (toast)="toast($event)"
+    (changeCasomira)="changeCasomira($event)"
+    (reloadVideo)="openVideoTime($event)"
+    (saveType)="saveType($event)"
+    [homeShortcut]="game.gameData.homeTeam.shortcut"
+    [awayShortcut]="game.gameData.awayTeam.shortcut"
+  >
+  </dumpIn-canvas>
+
+  <zoneExit-canvas
+    *ngIf="show_zoneExit"
+    (closeCanvas)="close($event)"
+    [page_type]="page_type"
+    [roster_home]="roster_home"
+    [roster_away]="roster_away"
+    [period]="period"
+    [minute]="minute"
+    [second]="second"
+    [editData]="editData"
+    [reversed_sides]="reversed_sides"
+    (toast)="toast($event)"
+    (changeCasomira)="changeCasomira($event)"
+    (reloadVideo)="openVideoTime($event)"
+    (saveType)="saveType($event)"
+    [homeShortcut]="game.gameData.homeTeam.shortcut"
+    [awayShortcut]="game.gameData.awayTeam.shortcut"
+    [selected_x]="test_x"
+    [selected_y]="test_y"
+  >
+  </zoneExit-canvas>
+
+  <dumpOut-canvas
+    *ngIf="show_dumpOut"
+    (closeCanvas)="close(undefined)"
+    [page_type]="page_type"
+    [roster_home]="roster_home"
+    [roster_away]="roster_away"
+    [period]="period"
+    [minute]="minute"
+    [second]="second"
+    [editData]="editData"
+    [reversed_sides]="reversed_sides"
+    (toast)="toast($event)"
+    (changeCasomira)="changeCasomira($event)"
+    (reloadVideo)="openVideoTime($event)"
+    (saveType)="saveType($event)"
+    [homeShortcut]="game.gameData.homeTeam.shortcut"
+    [awayShortcut]="game.gameData.awayTeam.shortcut"
+    [selected_x]="test_x"
+    [selected_y]="test_y"
+  >
+  </dumpOut-canvas>
+
+  <offensiveZoneLoss-canvas
+    *ngIf="show_offensiveZoneLoss"
+    (closeCanvas)="close(undefined)"
+    [page_type]="page_type"
+    [roster_home]="roster_home"
+    [roster_away]="roster_away"
+    [period]="period"
+    [minute]="minute"
+    [second]="second"
+    [editData]="editData"
+    [reversed_sides]="reversed_sides"
+    [selected_x]="test_x"
+    [selected_y]="test_y"
+    (toast)="toast($event)"
+    (changeCasomira)="changeCasomira($event)"
+    (reloadVideo)="openVideoTime($event)"
+    (saveType)="saveType($event)"
+    [homeShortcut]="game.gameData.homeTeam.shortcut"
+    [awayShortcut]="game.gameData.awayTeam.shortcut"
+  >
+  </offensiveZoneLoss-canvas>
+
+  <hit-canvas
+    *ngIf="show_hit"
+    (closeCanvas)="close(undefined)"
+    [page_type]="page_type"
+    [roster_home]="roster_home"
+    [roster_away]="roster_away"
+    [period]="period"
+    [minute]="minute"
+    [second]="second"
+    [editData]="editData"
+    [reversed_sides]="reversed_sides"
+    (toast)="toast($event)"
+    (reloadVideo)="openVideoTime($event)"
+    (saveType)="saveType($event)"
+    [homeShortcut]="game.gameData.homeTeam.shortcut"
+    [awayShortcut]="game.gameData.awayTeam.shortcut"
+  ></hit-canvas>
+
+  <shootout-canvas
+    *ngIf="show_shootout"
+    (closeCanvas)="close(undefined)"
+    [page_type]="page_type"
+    [roster_home]="roster_home"
+    [roster_away]="roster_away"
+    [period]="period"
+    [minute]="minute"
+    [second]="second"
+    [editData]="editData"
+    [reversed_sides]="reversed_sides"
+    (toast)="toast($event)"
+    (changeCasomira)="changeCasomira($event)"
+    (reloadVideo)="openVideoTime($event)"
+    (reloadTrueVideo)="openVideoTrueTime($event)"
+    (saveType)="saveType($event)"
+    [homeShortcut]="game.gameData.homeTeam.shortcut"
+    [awayShortcut]="game.gameData.awayTeam.shortcut"
+  >
+  </shootout-canvas>
+
+  <penalty-canvas
+    *ngIf="show_penalty"
+    (closeCanvas)="close(undefined)"
+    [page_type]="page_type"
+    [roster_home]="roster_home"
+    [roster_away]="roster_away"
+    [period]="period"
+    [minute]="minute"
+    [second]="second"
+    [editData]="editData"
+    [reversed_sides]="reversed_sides"
+    (toast)="toast($event)"
+    (changeCasomira)="changeCasomira($event)"
+    (reloadVideo)="openVideoTime($event)"
+    (saveType)="saveType($event)"
+    [homeShortcut]="game.gameData.homeTeam.shortcut"
+    [awayShortcut]="game.gameData.awayTeam.shortcut"
+  >
+  </penalty-canvas>
+
+  <loading *ngIf="loading"></loading>
+</div>

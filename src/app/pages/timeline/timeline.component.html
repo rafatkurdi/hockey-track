@@ -1,0 +1,496 @@
+<div class="disabled-watch" *ngIf="disabledWatch">
+  <h3>Sběr dat u tohoto zápasu byl ukončen. Vraťte se na výpis zápasů.</h3>
+  <button (click)="goToSelect()">Výpis zápasů</button>
+</div>
+<app-nav></app-nav>
+<div class="page">
+  <div
+    class="settings"
+    [ngStyle]="{ 'border-bottom': select_mode ? '2px solid red' : '' }"
+  >
+    <div class="settings-left">
+      <div class="box">
+        <select (change)="onTeamChange($event)" [(ngModel)]="selected_team">
+          <option value="home">{{ homeTeamName }}</option>
+          <option value="away">{{ awayTeamName }}</option>
+        </select>
+      </div>
+      <div class="box count">
+        <div
+          class="value"
+          (click)="jumpToProblem()"
+          [class.disabled]="problem_seconds.length == 0"
+        >
+          {{ problem_seconds.length }}
+        </div>
+      </div>
+      <div class="box from-to">
+        <button
+          [ngClass]="select_mode ? 'active' : 'inactive'"
+          (click)="activeShiftSelect()"
+        >
+          Vybrat časový úsek
+        </button>
+      </div>
+      <div
+        class="box"
+        style="display: flex; align-items: center"
+        *ngIf="select_mode"
+      >
+        <button class="hover" (click)="showSelected()">Vybrané</button>
+        <div
+          class="selected"
+          *ngIf="show_selected && selected_shifts.length != 0"
+        >
+          <div
+            class="selected-wrapper"
+            *ngFor="let shift of selected_shifts; let i = index"
+          >
+            <div>
+              {{ formatTime(shift.time.start) }} -
+              {{ getPlayerNumber(shift.playerId) }}
+              {{ getPlayerName(shift.playerId) }} -
+              {{ formatTime(shift.time.end) }}
+            </div>
+            <div>
+              <button class="delete" (click)="deleteShift(i)">x</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="box from-to" *ngIf="select_mode">
+        <span>Úsek od:</span>
+        <input
+          [(ngModel)]="raw_move_time_from"
+          type="string"
+          (ngModelChange)="formatTimeFrom(raw_move_time_from)"
+        />
+      </div>
+      <div class="box from-to" *ngIf="select_mode">
+        <span>Úsek do:</span>
+        <input
+          [(ngModel)]="raw_move_time_to"
+          type="string"
+          (ngModelChange)="formatTimeTo(raw_move_time_to)"
+        />
+      </div>
+      <div class="box from-to">
+        <span>Od:</span>
+        <input
+          [(ngModel)]="move_time_from"
+          type="number"
+          value="0"
+          max="9999"
+        />
+      </div>
+      <div class="box from-to">
+        <span>Do:</span>
+        <input [(ngModel)]="move_time_to" type="number" value="0" max="9999" />
+      </div>
+      <div class="box from-to">
+        <button
+          *ngIf="select_mode"
+          [disabled]="move_time_to == 0 && select_to == 0"
+          (click)="selectSelected()"
+        >
+          Vybrat
+        </button>
+      </div>
+      <div class="box from-to">
+        <button
+          *ngIf="!select_mode"
+          [disabled]="!move_time_to"
+          (click)="moveAllShifts()"
+        >
+          Posunout všechna střídání
+        </button>
+        <button
+          *ngIf="select_mode"
+          [disabled]="selected_shifts.length == 0"
+          (click)="moveSelectedShifts()"
+        >
+          Posunout vybraná střídání
+        </button>
+      </div>
+      <div class="box from-to" *ngIf="!select_mode">
+        <span>Autosave:</span>
+        <button
+          class="switch"
+          [ngClass]="autosave ? 'active' : 'inactive'"
+          (click)="switchAutosave(true)"
+        >
+          On
+        </button>
+        <button
+          class="switch"
+          [ngClass]="!autosave ? 'active' : 'inactive'"
+          (click)="switchAutosave(false)"
+        >
+          Off
+        </button>
+      </div>
+      <div class="box from-to">
+        <button class="save" *ngIf="!autosave" (click)="saveSelected()">
+          Save
+        </button>
+      </div>
+      <div class="box color-help">
+        <div class="help-colorBox bad1"></div>
+        <span>< 5</span>
+        <div class="help-colorBox bad2"></div>
+        <span>< 10</span>
+        <div class="help-colorBox bad3"></div>
+        <span>< 15</span>
+        <div class="help-colorBox bad"></div>
+        <span>> 90</span>
+      </div>
+    </div>
+    <div class="settings-right">
+      <!--
+      <div class="box">
+        <button class="camera" (click)="active_camera=1" [class.active]="active_camera==1">Kamera 1</button>
+      </div>
+      <div class="box">
+        <button class="camera" (click)="active_camera=2" [class.active]="active_camera==2">Kamera 2</button>
+      </div>
+      <div class="box">
+        <button class="camera" (click)="active_camera=3" [class.active]="active_camera==3">Kamera 3</button>
+      </div>
+      -->
+    </div>
+  </div>
+
+  <div class="timeline">
+    <div class="legenda">
+      <div
+        class="seconds"
+        (click)="jumpToProblem()"
+        [class.disabled]="problem_seconds.length == 0"
+      >
+        <span>Supervize</span>
+      </div>
+      <div class="title orange">Počet hráčů</div>
+      <div class="title blue">{{ langData.eventType }}</div>
+      <!-- Nedavat na PRODUKCIU -->
+      <!-- <div class="title orange">Hit</div>
+      <div class="title red">Blok</div> -->
+
+      <div class="slot">Slot 1</div>
+      <div class="slot">Slot 2</div>
+      <div class="slot">Slot 3</div>
+      <div class="slot">Slot 4</div>
+      <div class="slot">Slot 5</div>
+      <div class="slot">Slot 6</div>
+      <div class="slot">Slot 7</div>
+      <div class="slot">Slot 8</div>
+      <div class="slot">Slot 9</div>
+      <div class="slot">Slot 10</div>
+    </div>
+    <div class="content" #scrollView>
+      <div
+        class="selection"
+        (contextmenu)="addShift($event)"
+        (click)="documentClick()"
+      >
+        <div
+          class="second"
+          *ngFor="let second of getGameLength()"
+          [ngStyle]="{ 'left.px': calcPos(second) }"
+          [class.problem]="
+            checkProblem(second) || checkFaceOff(second) || checkShot(second)
+          "
+        ></div>
+      </div>
+
+      <div
+        class="row seconds"
+        [ngStyle]="{ 'width.px': calcWidth(gameLength) }"
+      >
+        <div
+          class="second"
+          *ngFor="let second of getGameLength()"
+          [class.problem]="checkProblem(second)"
+          [class.faceoff]="checkFaceOff(second)"
+          [class.shot]="checkShot(second)"
+          (click)="openVideo(second)"
+        >
+          <span>{{ formatTime(second) }}</span>
+        </div>
+      </div>
+
+      <div
+        class="row players-count"
+        [ngStyle]="{ 'width.px': calcWidth(gameLength) }"
+      >
+        <div
+          class="count"
+          *ngFor="let state of gameState"
+          [class.important]="state.shortcut != '5:5'"
+          [ngStyle]="{
+            'left.px': calcPos(state.start),
+            'width.px': calcWidth(state.length)
+          }"
+        >
+          <div class="shortcut-left">{{ state.shortcut }}</div>
+          <div class="shortcut-right">{{ state.shortcut }}</div>
+        </div>
+      </div>
+      <!-- STRELY vyrazeny -->
+      <!--      <div class="row shots" [ngStyle]="{ 'width.px': calcWidth(gameLength) }">-->
+      <!--        <div-->
+      <!--          class="shot"-->
+      <!--          *ngFor="let shot of shots"-->
+      <!--          [ngStyle]="{ 'left.px': calcPos(shot.time) }"-->
+      <!--        >-->
+      <!--          S-->
+
+      <!--          <div class="popup">-->
+      <!--            <div>-->
+      <!--              {{ getPlayerNumber(shot.player) }}-->
+      <!--              {{ getPlayerName(shot.player) }}-->
+      <!--            </div>-->
+      <!--            <div>{{ formatTime(shot.time) }}</div>-->
+      <!--          </div>-->
+      <!--        </div>-->
+      <!--      </div>-->
+
+      <div
+        class="row faceoffs"
+        [ngStyle]="{ 'width.px': calcWidth(gameLength) }"
+      >
+        <div
+          class="faceoff"
+          *ngFor="let _event of eventTimeLineData; let i = index"
+          id="_event_{{ i }}"
+          [ngStyle]="{ 'left.px': ManageEventTimeLineShape(_event.time, i) }"
+        >
+          {{ EXCLAMATION_MARK }}
+
+          <div class="popup" [class.first]="_event.time < 2">
+            <div>
+              <p class="eventType">
+                {{ _event.event === undefined ? getEventType() : _event.event }}
+              </p>
+              <ng-container
+                *ngFor="let player of _event.players | keyvalue; index as i"
+              >
+                <ng-container
+                  *ngIf="player.value !== null && player.value !== undefined"
+                >
+                  <span *ngIf="i > 0">/</span>
+                  {{ getPlayerNumber(player.value) }}
+                  {{ getPlayerName(player.value) }}
+                </ng-container>
+              </ng-container>
+            </div>
+            <div>{{ formatTime(_event.time) }}</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Nedávať na PRODUKCIU -->
+
+      <!--  <div
+        class="row faceoffs"
+        [ngStyle]="{ 'width.px': calcWidth(gameLength) }"
+      >
+        <div
+          class="block"
+          *ngFor="let hit of hits; let i = index"
+          [ngStyle]="{ 'left.px': calcPos(hit.time) }"
+        >
+          V
+
+          <div class="popup" [class.first]="i == 0">
+            <div>
+            </div>
+            <div>{{ formatTime(hit.time) }}</div>
+          </div>
+        </div>
+      </div>
+
+      <div
+        class="row faceoffs"
+        [ngStyle]="{ 'width.px': calcWidth(gameLength) }"
+      >
+        <div
+          class="hit"
+          *ngFor="let block of blocks; let i = index"
+          [ngStyle]="{ 'left.px': calcPos(block.time) }"
+        >
+          V
+
+          <div class="popup" [class.first]="i == 0">
+            <div>
+            </div>
+            <div>{{ formatTime(block.time) }}</div>
+          </div>
+        </div>
+      </div> -->
+
+      <!--  -->
+
+      <div
+        *ngFor="let slot_number of slots_list"
+        class="row slot slot-{{ slot_number }}"
+        (contextmenu)="addShift($event)"
+        (click)="documentClick()"
+        [ngStyle]="{ 'width.px': calcWidth(gameLength) }"
+      >
+        <div
+          class="shift {{
+            getShiftWidthClass(calcWidth(slot.to - slot.from))
+          }} {{ getPlayerPost(slot.player) }}"
+          [class.first]="i == 0"
+          [class.error]="slot.to - slot.from == 1"
+          [ngStyle]="{
+            left: calcPos(slot.from) + 'px',
+            width: calcWidth(slot.to - slot.from) + 'px'
+          }"
+          [ngClass]="{ bad: slot.to - slot.from > 90 }"
+          [class.bad1]="slot.to - slot.from < 5"
+          [class.bad2]="slot.to - slot.from < 10 && slot.to - slot.from > 4"
+          [class.bad3]="slot.to - slot.from < 15 && slot.to - slot.from > 9"
+          mwlResizable
+          [enableGhostResize]="true"
+          ghostElementPositioning="absolute"
+          [resizeEdges]="{ bottom: false, right: true, top: false, left: true }"
+          [resizeSnapGrid]="{ left: 20, right: 20 }"
+          (resizeEnd)="onResizeEnd($event, slot, slot_number, i)"
+          (contextmenu)="editShift($event, slot)"
+          *ngFor="let slot of getSlot(slot_number); let i = index"
+          (click)="selectShift(slot.shift)"
+          [class.lol]="clicked_shift != null"
+          [class.canDrag]="clicked_shift == slot.shift"
+        >
+          <!--(resizing)="resizing($event)"-->
+
+          <div class="shift-inner">
+            <div class="from">{{ formatTime(slot.from) }}</div>
+            <div class="player">
+              <span class="jersey"
+                >{{ getPlayerNumber(slot.player) }}&nbsp;</span
+              >
+              <span class="player-name">{{ getPlayerName(slot.player) }}</span>
+            </div>
+            <div class="to">{{ formatTime(slot.to) }}</div>
+
+            <div
+              class="overlay-from"
+              [ngStyle]="{ width: calcWidth(slot.overlayFrom) + 'px' }"
+              *ngIf="slot.overlayFrom > 4"
+            ></div>
+            <div
+              class="overlay-to"
+              [ngStyle]="{ width: calcWidth(slot.overlayTo) + 'px' }"
+              *ngIf="slot.overlayTo > 4"
+            ></div>
+          </div>
+
+          <div class="popup">
+            <div>
+              {{ getPlayerNumber(slot.player) }}
+              {{ getPlayerName(slot.player) }}
+            </div>
+            <div>{{ formatTime(slot.from) }} - {{ formatTime(slot.to) }}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<loading *ngIf="loading"></loading>
+
+<div
+  class="edit-shift"
+  [ngStyle]="{ left: dialog_x + 'px', top: dialog_y + 'px' }"
+  *ngIf="show_edit_dialog"
+>
+  <div class="event-row">
+    <div class="event-box" (click)="toggleNewShift()">
+      <div class="text">Nové střídání</div>
+      <div class="ico add"></div>
+    </div>
+    <div class="event-more" *ngIf="new_shift">
+      <select class="event-select" [(ngModel)]="selected_player">
+        <option value="" selected disabled>Vyberte hráče</option>
+        <option *ngFor="let player of getRoster()" value="{{ player.id }}">
+          #{{ player.jersey }} {{ player.surname }}
+        </option>
+      </select>
+      <table>
+        <tr>
+          <td class="event-time">
+            <input type="text" [(ngModel)]="from" />
+          </td>
+          <td class="event-time">
+            <input type="text" [(ngModel)]="to" />
+          </td>
+        </tr>
+      </table>
+      <button class="submit" (click)="submitNewShift()">Uložit</button>
+    </div>
+  </div>
+  <div class="event-row">
+    <div class="event-box" (click)="toggleEditPlayer()">
+      <div class="text">Změna hráče</div>
+      <div class="ico edit"></div>
+    </div>
+    <div class="event-more" *ngIf="edit_player">
+      <select class="event-select" [(ngModel)]="selected_player">
+        <option value="" selected disabled>Vyberte hráče</option>
+        <option *ngFor="let player of getRoster()" value="{{ player.id }}">
+          #{{ player.jersey }} {{ player.surname }}
+        </option>
+      </select>
+      <button class="submit" (click)="changePlayer()">Uložit</button>
+    </div>
+  </div>
+  <!--
+  <div class="event-row" (click)="toggleEditEvent()">
+    <div class="event-box">
+      <div class="text">Editovat událost</div>
+      <div class="ico edit2"></div>
+    </div>
+  </div>
+  -->
+  <div class="event-row" (click)="removeShift()">
+    <div class="event-box">
+      <div class="text red">Vymazat střídání</div>
+      <div class="ico remove"></div>
+    </div>
+  </div>
+</div>
+
+<div
+  class="add-shift"
+  [ngStyle]="{ left: dialog_x + 'px', top: dialog_y + 'px' }"
+  *ngIf="show_addshift_dialog"
+>
+  <div class="event-row">
+    <div class="event-box" (click)="toggleNewShift()">
+      <div class="text">Nové střídání</div>
+      <div class="ico add"></div>
+    </div>
+    <div class="event-more" *ngIf="new_shift">
+      <select class="event-select" [(ngModel)]="selected_player">
+        <option value="" selected disabled>Vyberte hráče</option>
+        <option *ngFor="let player of getRoster()" value="{{ player.id }}">
+          #{{ player.jersey }} {{ player.surname }}
+        </option>
+      </select>
+      <table>
+        <tr>
+          <td class="event-time">
+            <input type="text" [(ngModel)]="from" />
+          </td>
+          <td class="event-time">
+            <input type="text" [(ngModel)]="to" />
+          </td>
+        </tr>
+      </table>
+      <button class="submit" (click)="submitNewShift()">Uložit</button>
+    </div>
+  </div>
+</div>

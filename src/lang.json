@@ -1,0 +1,9 @@
+{
+  "error_select_default": "Bez ohledu na chyby",
+  "allErrors": "Chyby a upozornění",
+  "errors": "Chyby",
+  "warnings": "Upozornění",
+  "invalidCasomira": "Hodnota časomíry musí být menší nebo rovna 20:00",
+  "throwing": "Vhazování",
+  "eventType": "Typ události"
+}

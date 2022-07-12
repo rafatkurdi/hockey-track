@@ -1,0 +1,346 @@
+<div
+  class="container canvas"
+  (click)="disableContextMenu()"
+  oncontextmenu="return false;"
+>
+  <button class="close" (click)="close()">Zavřít bez uložení</button>
+  <div class="canvas-scroll" #scroller>
+    <div class="canvas-data">
+      <div class="canvas-box">
+        <h2>
+          Ztráta útočného pásma
+          <button class="replay" (click)="replay(time)"></button>
+        </h2>
+        <div class="box-inner">
+          <div class="box">
+            <div
+              class="form-box two-buttons"
+              [class.danger]="supervize.type"
+              (contextmenu)="toggleMenu($event, 'type')"
+            >
+              <label>Druh ztráty útočného pásma</label>
+              <table>
+                <tr>
+                  <td>
+                    <button
+                      (click)="type = 'clear'"
+                      [class.active]="type == 'clear'"
+                    >
+                      Vyražením puku bránícím hráčem
+                    </button>
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <button
+                      (click)="type = 'quit'"
+                      [class.active]="type == 'quit'"
+                    >
+                      Po vyvezení, střele, přihrávce út. hráče
+                    </button>
+                  </td>
+                </tr>
+              </table>
+            </div>
+          </div>
+          <div class="box">
+            <div class="form-box three-inputs">
+              <table>
+                <tr>
+                  <th>Čas časomíry</th>
+                  <th>Třetina</th>
+                  <th>Lokace</th>
+                </tr>
+                <tr>
+                  <td>
+                    <input
+                      type="text"
+                      class="noedit"
+                      matInput
+                      mask="m0:s0"
+                      [dropSpecialCharacters]="false"
+                      [(ngModel)]="time"
+                      (focus)="focusTime()"
+                      (blur)="sendTimeCasomira()"
+                      onClick="this.select();"
+                    />
+                  </td>
+                  <td>
+                    <input
+                      type="text"
+                      class="noedit"
+                      disabled
+                      [(ngModel)]="period"
+                    />
+                  </td>
+                  <td>
+                    <input
+                      type="text"
+                      (focus)="checkXY()"
+                      (blur)="uncheckXY()"
+                      [(ngModel)]="lokace"
+                    />
+                  </td>
+                </tr>
+              </table>
+            </div>
+            <div
+              class="form-box"
+              [class.danger]="supervize.playerId"
+              (contextmenu)="toggleMenu($event, 'playerId')"
+            >
+              <label>Útočící hráč, který ztratil držení puku</label>
+              <div class="player-select">
+                <ng-select
+                  [items]="roster_all"
+                  bindLabel="search"
+                  bindValue="id"
+                  dropdownPosition="bottom"
+                  [(ngModel)]="player1"
+                  (focus)="player1_active = true"
+                  (blur)="player1_active = false"
+                >
+                  <ng-template ng-label-tmp let-item="item">
+                    <table class="ng-select-item">
+                      <tr>
+                        <td style="width: 20px">
+                          <img
+                            src="/assets/image/logos/{{
+                              getPlayerTeamShortcut(item.id)
+                            }}.png"
+                            onerror="this.src='/assets/image/logos/default.png';"
+                            onerror="this.src='/assets/image/logos/default.png';"
+                            width="18px"
+                            height="18px"
+                            style="
+                              vertical-align: top;
+                              margin-top: 0px;
+                              margin-right: 4px;
+                            "
+                            *ngIf="item.id != ''"
+                          />
+                        </td>
+                        <td style="width: 29px">
+                          <div class="jersey">{{ item.jersey }}</div>
+                        </td>
+                        <td>{{ item.surname }} {{ item.name }}</td>
+                        <td style="width: 16px">
+                          <div class="position" *ngIf="item.id != ''">
+                            {{ formatPosition(item.position) }}
+                          </div>
+                        </td>
+                      </tr>
+                    </table>
+                  </ng-template>
+
+                  <ng-template ng-option-tmp let-item="item">
+                    <table class="ng-select-item">
+                      <tr>
+                        <td style="width: 20px">
+                          <img
+                            src="/assets/image/logos/{{
+                              getPlayerTeamShortcut(item.id)
+                            }}.png"
+                            onerror="this.src='/assets/image/logos/default.png';"
+                            onerror="this.src='/assets/image/logos/default.png';"
+                            width="18px"
+                            height="18px"
+                            style="
+                              vertical-align: top;
+                              margin-top: 0px;
+                              margin-right: 4px;
+                            "
+                            *ngIf="item.id != null"
+                          />
+                        </td>
+                        <td style="width: 29px">
+                          <div class="jersey">{{ item.jersey }}</div>
+                        </td>
+                        <td>{{ item.surname }} {{ item.name }}</td>
+                        <td style="width: 16px">
+                          <div class="position">
+                            {{ formatPosition(item.position) }}
+                          </div>
+                        </td>
+                      </tr>
+                    </table>
+                  </ng-template>
+                </ng-select>
+              </div>
+            </div>
+            <div
+              class="form-box"
+              *ngIf="type == 'clear'"
+              [class.danger]="supervize.clearPlayerId"
+              (contextmenu)="toggleMenu($event, 'clearPlayerId')"
+            >
+              <label>Bránící hráč, který vyrazil puk přes modrou</label>
+              <div class="player-select">
+                <ng-select
+                  [items]="getOpponentRoster(player1)"
+                  bindLabel="search"
+                  bindValue="id"
+                  [(ngModel)]="player2"
+                  (focus)="player2_active = true"
+                  (blur)="player2_active = false"
+                >
+                  <ng-template ng-label-tmp let-item="item">
+                    <table class="ng-select-item">
+                      <tr>
+                        <td style="width: 20px">
+                          <img
+                            src="/assets/image/logos/{{
+                              getPlayerTeamShortcut(item.id)
+                            }}.png"
+                            onerror="this.src='/assets/image/logos/default.png';"
+                            onerror="this.src='/assets/image/logos/default.png';"
+                            width="18px"
+                            height="18px"
+                            style="
+                              vertical-align: top;
+                              margin-top: 0px;
+                              margin-right: 4px;
+                            "
+                            *ngIf="item.id != ''"
+                          />
+                        </td>
+                        <td style="width: 29px">
+                          <div class="jersey">{{ item.jersey }}</div>
+                        </td>
+                        <td>{{ item.surname }} {{ item.name }}</td>
+                        <td style="width: 16px">
+                          <div class="position" *ngIf="item.id != ''">
+                            {{ formatPosition(item.position) }}
+                          </div>
+                        </td>
+                      </tr>
+                    </table>
+                  </ng-template>
+
+                  <ng-template ng-option-tmp let-item="item">
+                    <table class="ng-select-item">
+                      <tr>
+                        <td style="width: 20px">
+                          <img
+                            src="/assets/image/logos/{{
+                              getPlayerTeamShortcut(item.id)
+                            }}.png"
+                            onerror="this.src='/assets/image/logos/default.png';"
+                            onerror="this.src='/assets/image/logos/default.png';"
+                            width="18px"
+                            height="18px"
+                            style="
+                              vertical-align: top;
+                              margin-top: 0px;
+                              margin-right: 4px;
+                            "
+                            *ngIf="item.id != null"
+                          />
+                        </td>
+                        <td style="width: 29px">
+                          <div class="jersey">{{ item.jersey }}</div>
+                        </td>
+                        <td>{{ item.surname }} {{ item.name }}</td>
+                        <td style="width: 16px">
+                          <div class="position">
+                            {{ formatPosition(item.position) }}
+                          </div>
+                        </td>
+                      </tr>
+                    </table>
+                  </ng-template>
+                </ng-select>
+              </div>
+            </div>
+            <div class="submits">
+              <button class="submit" (click)="submit('normal')">
+                Uložit záznam
+              </button>
+              <button
+                class="submit"
+                (click)="submit('save_next')"
+                *ngIf="editPage"
+              >
+                Uložit a přejít na další
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="canvas-box">
+        <h2>&nbsp;</h2>
+        <div class="box-inner">
+          <div class="playground show_playground" (click)="onMapClick($event)">
+            <ng-container *ngIf="!reversed_sides">
+              <img
+                src="/assets/image/logos/{{ homeShortcut }}.png"
+                onerror="this.src='/assets/image/logos/default.png';"
+                class="home-logo"
+              />
+
+              <img
+                src="/assets/image/logos/{{ awayShortcut }}.png"
+                onerror="this.src='/assets/image/logos/default.png';"
+                class="away-logo"
+              />
+            </ng-container>
+            <ng-container *ngIf="reversed_sides">
+              <img
+                src="/assets/image/logos/{{ awayShortcut }}.png"
+                onerror="this.src='/assets/image/logos/default.png';"
+                class="home-logo"
+              />
+              <img
+                src="/assets/image/logos/{{ homeShortcut }}.png"
+                onerror="this.src='/assets/image/logos/default.png';"
+                class="away-logo"
+              />
+            </ng-container>
+            <div
+              class="coordinate1"
+              [ngStyle]="{
+                'left.px': getCoordinatesMap(lokace, 'x'),
+                'top.px': getCoordinatesMap(lokace, 'y')
+              }"
+              *ngIf="lokace != ''"
+            ></div>
+
+            <img src="/assets/image/hriste-634x312.svg" />
+          </div>
+          <div class="coordinates-list">
+            <div class="form-box">
+              <label>Ztráta</label>
+              <div class="input-box red">
+                <input
+                  type="text"
+                  (focus)="checkXY()"
+                  (blur)="uncheckXY()"
+                  [(ngModel)]="lokace"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <loading-small *ngIf="loading"></loading-small>
+
+  <div
+    class="menu"
+    *ngIf="contextmenu"
+    [ngStyle]="{ 'left.px': contextmenuX, 'top.px': contextmenuY }"
+  >
+    <a (click)="toggleSupervize()" class="supervize">Supervize</a>
+    <a (click)="toggleHelp()" class="help">Nápověda</a>
+  </div>
+
+  <div class="help-box" *ngIf="showhelp" [ngStyle]="{ 'top.px': contextmenuY }">
+    <h3>{{ help_title }}</h3>
+    <button class="closebtn" (click)="showhelp = false"></button>
+    <div class="desc">
+      {{ help_desc }}
+    </div>
+  </div>
+</div>

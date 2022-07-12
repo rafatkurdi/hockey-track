@@ -1,0 +1,24 @@
+<div class="page login">
+  <div class="login-box">
+    <div class="logo">
+      <img src="/assets/image/logo-hockeytrack_new@3x.png" width="275px">
+
+    </div>
+    <div class="version">verze {{version}} -
+      <span *ngIf="typ==true">PROD</span>
+      <span *ngIf="typ==false">TEST</span>
+    </div>
+
+    <div class="login-form">
+      <input type="text" placeholder="E-mail" class="username" [(ngModel)]="client_id">
+      <input type="password" placeholder="Heslo" class="password" [(ngModel)]="client_secret">
+      <button class="submit" (click)="login()">Přihlásit se</button>
+    </div>
+  </div>
+
+  <div class="copyright">Designed & Developed by eSports.cz</div>
+
+</div>
+
+
+<loading *ngIf="loading"></loading>

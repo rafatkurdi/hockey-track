@@ -1,0 +1,345 @@
+<div
+  class="container canvas"
+  (click)="disableContextMenu()"
+  oncontextmenu="return false;"
+>
+  <button class="close" (click)="close()">Zavřít bez uložení</button>
+  <div class="canvas-scroll" #scroller>
+    <div class="canvas-data">
+      <div class="canvas-box">
+        <h2>
+          Vyhození
+          <button class="replay" (click)="replay(time)"></button>
+        </h2>
+        <div class="box-inner">
+          <div class="box">
+            <div class="form-box two-inputs">
+              <table>
+                <tr>
+                  <th>Čas časomíry</th>
+                  <th>Třetina</th>
+                </tr>
+                <tr>
+                  <td>
+                    <input
+                      type="text"
+                      class="noedit"
+                      matInput
+                      mask="m0:s0"
+                      [dropSpecialCharacters]="false"
+                      [(ngModel)]="time"
+                      (focus)="focusTime()"
+                      (blur)="sendTimeCasomira()"
+                      onClick="this.select();"
+                    />
+                  </td>
+                  <td>
+                    <input
+                      type="text"
+                      class="noedit"
+                      disabled
+                      [(ngModel)]="period"
+                    />
+                  </td>
+                </tr>
+              </table>
+            </div>
+
+            <div
+              class="form-box"
+              [class.danger]="supervize.playerId"
+              (contextmenu)="toggleMenu($event, 'playerId')"
+            >
+              <label>HRÁČ, KTERÝ VYHODIL PUK</label>
+
+              <ng-select
+                [items]="roster_all"
+                bindLabel="search"
+                bindValue="id"
+                dropdownPosition="bottom"
+                [(ngModel)]="player"
+                (focus)="player_active = true"
+                (blur)="player_active = false"
+                (ngModelChange)="checkPlayer()"
+              >
+                <ng-template ng-label-tmp let-item="item">
+                  <table class="ng-select-item">
+                    <tr>
+                      <td style="width: 20px">
+                        <img
+                          src="/assets/image/logos/{{
+                            getPlayerTeamShortcut(item.id)
+                          }}.png"
+                          onerror="this.src='/assets/image/logos/default.png';"
+                          onerror="this.src='/assets/image/logos/default.png';"
+                          width="18px"
+                          height="18px"
+                          style="
+                            vertical-align: top;
+                            margin-top: 0px;
+                            margin-right: 4px;
+                          "
+                          *ngIf="item.id != ''"
+                        />
+                      </td>
+                      <td style="width: 29px">
+                        <div class="jersey">{{ item.jersey }}</div>
+                      </td>
+                      <td>{{ item.surname }} {{ item.name }}</td>
+                      <td style="width: 16px">
+                        <div class="position" *ngIf="item.id != ''">
+                          {{ formatPosition(item.position) }}
+                        </div>
+                      </td>
+                    </tr>
+                  </table>
+                </ng-template>
+
+                <ng-template ng-option-tmp let-item="item">
+                  <table class="ng-select-item">
+                    <tr>
+                      <td style="width: 20px">
+                        <img
+                          src="/assets/image/logos/{{
+                            getPlayerTeamShortcut(item.id)
+                          }}.png"
+                          onerror="this.src='/assets/image/logos/default.png';"
+                          onerror="this.src='/assets/image/logos/default.png';"
+                          width="18px"
+                          height="18px"
+                          style="
+                            vertical-align: top;
+                            margin-top: 0px;
+                            margin-right: 4px;
+                          "
+                          *ngIf="item.id != null"
+                        />
+                      </td>
+                      <td style="width: 29px">
+                        <div class="jersey">{{ item.jersey }}</div>
+                      </td>
+                      <td>{{ item.surname }} {{ item.name }}</td>
+                      <td style="width: 16px">
+                        <div class="position">
+                          {{ formatPosition(item.position) }}
+                        </div>
+                      </td>
+                    </tr>
+                  </table>
+                </ng-template>
+              </ng-select>
+            </div>
+          </div>
+
+          <div class="box">
+            <div
+              class="form-box two-buttons"
+              [class.danger]="supervize.dumpIn"
+              (contextmenu)="toggleMenu($event, 'dumpIn')"
+            >
+              <label>Vyhození puku do útočného pásma?</label>
+              <table>
+                <tr>
+                  <td>
+                    <button
+                      (click)="dumpIn = true"
+                      [class.active]="dumpIn == true"
+                    >
+                      Ano
+                    </button>
+                  </td>
+                  <td>
+                    <button
+                      (click)="dumpIn = false"
+                      [class.active]="dumpIn == false"
+                    >
+                      Ne
+                    </button>
+                  </td>
+                </tr>
+              </table>
+            </div>
+            <ng-container *ngIf="dumpIn == true">
+              <div
+                class="form-box"
+                [class.danger]="supervize.coordinates"
+                (contextmenu)="toggleMenu($event, 'coordinates')"
+              >
+                <label>Lokace přechodu puku přes útočnou modrou</label>
+                <input
+                  type="text"
+                  (focus)="checkXY()"
+                  (blur)="uncheckXY()"
+                  [(ngModel)]="lokace"
+                />
+              </div>
+              <div
+                class="form-box two-buttons"
+                [class.danger]="supervize.battle"
+                (contextmenu)="toggleMenu($event, 'battle')"
+              >
+                <label>Následoval po nahození souboj o puk?</label>
+                <table>
+                  <tr>
+                    <td>
+                      <button
+                        (click)="battle = true"
+                        [class.active]="battle == true"
+                      >
+                        Ano
+                      </button>
+                    </td>
+                    <td>
+                      <button
+                        (click)="battle = false"
+                        [class.active]="battle == false"
+                      >
+                        Ne
+                      </button>
+                    </td>
+                  </tr>
+                </table>
+              </div>
+              <div
+                class="form-box two-buttons"
+                [class.danger]="supervize.battleWonTeamId"
+                (contextmenu)="toggleMenu($event, 'battleWonTeamId')"
+              >
+                <label>Tým, který získal puk do držení</label>
+                <table>
+                  <tr>
+                    <td>
+                      <button
+                        (click)="battleWonTeam = 'utocici'"
+                        [class.active]="battleWonTeam == 'utocici'"
+                      >
+                        Útočící
+                      </button>
+                    </td>
+                    <td>
+                      <button
+                        (click)="battleWonTeam = 'branici'"
+                        [class.active]="battleWonTeam == 'branici'"
+                      >
+                        Bránící
+                      </button>
+                    </td>
+                  </tr>
+                </table>
+              </div>
+            </ng-container>
+          </div>
+        </div>
+      </div>
+      <div class="canvas-box small">
+        <div class="box-inner">
+          <div class="box">
+            <div class="submits" style="bottom: initial; top: 80px">
+              <button class="submit" (click)="submit('normal')">
+                Uložit záznam
+              </button>
+              <button
+                class="submit"
+                (click)="submit('save_next')"
+                *ngIf="editPage"
+              >
+                Uložit a přejít na další
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="canvas-box small">
+        <h2>&nbsp;</h2>
+        <div class="box-inner">
+          <div class="box"></div>
+        </div>
+      </div>
+      <div class="canvas-box">
+        <h2>&nbsp;</h2>
+        <div class="box-inner">
+          <div
+            class="playground"
+            [class.show_playground]="show_playground"
+            (click)="onMapClick($event)"
+          >
+            <ng-container *ngIf="!reversed_sides">
+              <img
+                src="/assets/image/logos/{{ homeShortcut }}.png"
+                onerror="this.src='/assets/image/logos/default.png';"
+                class="home-logo"
+              />
+
+              <img
+                src="/assets/image/logos/{{ awayShortcut }}.png"
+                onerror="this.src='/assets/image/logos/default.png';"
+                class="away-logo"
+              />
+            </ng-container>
+            <ng-container *ngIf="reversed_sides">
+              <img
+                src="/assets/image/logos/{{ awayShortcut }}.png"
+                onerror="this.src='/assets/image/logos/default.png';"
+                class="home-logo"
+              />
+              <img
+                src="/assets/image/logos/{{ homeShortcut }}.png"
+                onerror="this.src='/assets/image/logos/default.png';"
+                class="away-logo"
+              />
+            </ng-container>
+
+            <button class="toggle-button" (click)="showPlayground()"></button>
+
+            <div
+              class="coordinate1"
+              [ngStyle]="{
+                'left.px': getCoordinatesMap(lokace, 'x'),
+                'top.px': getCoordinatesMap(lokace, 'y')
+              }"
+              *ngIf="lokace != ''"
+            ></div>
+
+            <img src="/assets/image/hriste-634x312.svg" />
+          </div>
+          <div class="coordinates-list">
+            <div class="form-box">
+              <label>Lokace přechodu přes út. modrou</label>
+              <div class="input-box blue">
+                <input
+                  type="text"
+                  (focus)="checkXY()"
+                  (blur)="uncheckXY()"
+                  [(ngModel)]="lokace"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <loading-small *ngIf="loading"></loading-small>
+
+  <div
+    class="menu"
+    *ngIf="contextmenu"
+    [ngStyle]="{ 'left.px': contextmenuX, 'top.px': contextmenuY }"
+  >
+    <a (click)="toggleSupervize()" class="supervize">Supervize</a>
+    <a (click)="toggleHelp()" class="help">Nápověda</a>
+  </div>
+
+  <div
+    class="help-box"
+    *ngIf="showhelp"
+    [ngStyle]="{ 'left.px': contextmenuX, 'top.px': contextmenuY }"
+  >
+    <h3>{{ help_title }}</h3>
+    <button class="closebtn" (click)="showhelp = false"></button>
+    <div class="desc">
+      {{ help_desc }}
+    </div>
+  </div>
+</div>

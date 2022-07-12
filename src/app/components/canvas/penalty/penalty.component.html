@@ -1,0 +1,425 @@
+<div
+  class="container canvas"
+  (click)="disableContextMenu()"
+  oncontextmenu="return false;"
+>
+  <button class="close" (click)="close()">Zavřít bez uložení</button>
+  <div class="canvas-scroll" #scroller>
+    <div class="canvas-data">
+      <div class="canvas-box">
+        <h2>
+          Vyloučení
+          <button class="replay" (click)="replay(time)"></button>
+         
+        </h2>
+        <div class="box-inner">
+          <div class="box">
+            <div class="form-box three-inputs">
+              <table>
+                <tr>
+                  <th>Čas časomíry při udělení</th>
+                  <th>Třetina</th>
+                  <th>Lokace</th>
+                </tr>
+                <tr>
+                  <td>
+                    <input
+                      type="text"
+                      class="noedit"
+                      matInput
+                      mask="m0:s0"
+                      [dropSpecialCharacters]="false"
+                      [(ngModel)]="time"
+                      (focus)="focusTime()"
+                      disabled
+                    />
+                  </td>
+                  <td>
+                    <input
+                      type="text"
+                      class="noedit"
+                      disabled
+                      [(ngModel)]="period"
+                    />
+                  </td>
+                  <td>
+                    <input
+                      type="text"
+                      (focus)="checkXY()"
+                      (blur)="uncheckXY()"
+                      [(ngModel)]="lokace"
+                    />
+                  </td>
+                </tr>
+              </table>
+            </div>
+            <div
+              class="form-box"
+              [class.danger]="supervize.disciplinedPlayerId"
+              (contextmenu)="toggleMenu($event, 'disciplinedPlayerId')"
+            >
+              <label>Vyloučený hráč</label>
+              <div class="player-select">
+                <ng-select
+                  [items]="roster_all"
+                  bindLabel="search"
+                  bindValue="id"
+                  [(ngModel)]="player1"
+                  disabled
+                >
+                  <ng-template ng-label-tmp let-item="item">
+                    <table class="ng-select-item">
+                      <tr>
+                        <td style="width: 20px">
+                          <img
+                            src="/assets/image/logos/{{
+                              getPlayerTeamShortcut(item.id)
+                            }}.png"
+                            onerror="this.src='/assets/image/logos/default.png';"
+                            onerror="this.src='/assets/image/logos/default.png';"
+                            width="18px"
+                            height="18px"
+                            style="
+                              vertical-align: top;
+                              margin-top: 0px;
+                              margin-right: 4px;
+                            "
+                            *ngIf="item.id != ''"
+                          />
+                        </td>
+                        <td style="width: 29px">
+                          <div class="jersey">{{ item.jersey }}</div>
+                        </td>
+                        <td>{{ item.surname }} {{ item.name }}</td>
+                        <td style="width: 16px">
+                          <div class="position" *ngIf="item.id != ''">
+                            {{ formatPosition(item.position) }}
+                          </div>
+                        </td>
+                      </tr>
+                    </table>
+                  </ng-template>
+
+                  <ng-template ng-option-tmp let-item="item">
+                    <table class="ng-select-item">
+                      <tr>
+                        <td style="width: 20px">
+                          <img
+                            src="/assets/image/logos/{{
+                              getPlayerTeamShortcut(item.id)
+                            }}.png"
+                            onerror="this.src='/assets/image/logos/default.png';"
+                            onerror="this.src='/assets/image/logos/default.png';"
+                            width="18px"
+                            height="18px"
+                            style="
+                              vertical-align: top;
+                              margin-top: 0px;
+                              margin-right: 4px;
+                            "
+                            *ngIf="item.id != null"
+                          />
+                        </td>
+                        <td style="width: 29px">
+                          <div class="jersey">{{ item.jersey }}</div>
+                        </td>
+                        <td>{{ item.surname }} {{ item.name }}</td>
+                        <td style="width: 16px">
+                          <div class="position">
+                            {{ formatPosition(item.position) }}
+                          </div>
+                        </td>
+                      </tr>
+                    </table>
+                  </ng-template>
+                </ng-select>
+              </div>
+            </div>
+            <div
+              class="form-box"
+              [class.danger]="supervize.shortcut"
+              (contextmenu)="toggleMenu($event, 'shortcut')"
+            >
+              <label>Druh trestu</label>
+              <select disabled>
+                <option>{{ penaltyShortcut }}</option>
+              </select>
+            </div>
+            <div
+              class="form-box"
+              [class.danger]="supervize.fouledPlayerId"
+              (contextmenu)="toggleMenu($event, 'fouledPlayerId')"
+            >
+              <label>Faulovaný hráč</label>
+              <div class="player-select">
+                <ng-select
+                  [items]="getOpponentRoster(player1)"
+                  bindLabel="search"
+                  bindValue="id"
+                  [(ngModel)]="player2"
+                  (focus)="player2_active = true"
+                  (blur)="player2_active = false"
+                >
+                  <ng-template ng-label-tmp let-item="item">
+                    <table class="ng-select-item">
+                      <tr>
+                        <td style="width: 20px">
+                          <img
+                            src="/assets/image/logos/{{
+                              getPlayerTeamShortcut(item.id)
+                            }}.png"
+                            onerror="this.src='/assets/image/logos/default.png';"
+                            onerror="this.src='/assets/image/logos/default.png';"
+                            width="18px"
+                            height="18px"
+                            style="
+                              vertical-align: top;
+                              margin-top: 0px;
+                              margin-right: 4px;
+                            "
+                            *ngIf="item.id != ''"
+                          />
+                        </td>
+                        <td style="width: 29px">
+                          <div class="jersey">{{ item.jersey }}</div>
+                        </td>
+                        <td>{{ item.surname }} {{ item.name }}</td>
+                        <td style="width: 16px">
+                          <div class="position" *ngIf="item.id != ''">
+                            {{ formatPosition(item.position) }}
+                          </div>
+                        </td>
+                      </tr>
+                    </table>
+                  </ng-template>
+
+                  <ng-template ng-option-tmp let-item="item">
+                    <table class="ng-select-item">
+                      <tr>
+                        <td style="width: 20px">
+                          <img
+                            src="/assets/image/logos/{{
+                              getPlayerTeamShortcut(item.id)
+                            }}.png"
+                            onerror="this.src='/assets/image/logos/default.png';"
+                            onerror="this.src='/assets/image/logos/default.png';"
+                            width="18px"
+                            height="18px"
+                            style="
+                              vertical-align: top;
+                              margin-top: 0px;
+                              margin-right: 4px;
+                            "
+                            *ngIf="item.id != null"
+                          />
+                        </td>
+                        <td style="width: 29px">
+                          <div class="jersey">{{ item.jersey }}</div>
+                        </td>
+                        <td>{{ item.surname }} {{ item.name }}</td>
+                        <td style="width: 16px">
+                          <div class="position">
+                            {{ formatPosition(item.position) }}
+                          </div>
+                        </td>
+                      </tr>
+                    </table>
+                  </ng-template>
+                </ng-select>
+              </div>
+            </div>
+          </div>
+          <div class="box">
+            <div
+              class="form-box four-buttons"
+              [class.danger]="supervize.teamStrength"
+              (contextmenu)="toggleMenu($event, 'teamStrength')"
+            >
+              <h3 style="position: relative;">V jakém počtu hráčů na ledě se pokračovalo v čase časomíry
+                {{formatTime_realTime(pen_time)}}?
+                 <button class="replay second" (click)="replay_pure(pen_time)"></button>
+              </h3>
+              <label>Tým hráče, jemuž byl udělen trest</label>
+              <table>
+                <tr>
+                  <!-- Na produkciu nie -->
+                  <!-- <td>
+                    <button
+                      (click)="toggleDisciplinedTeamStrength(6)"
+                      [class.active]="disciplinedTeamStrength == 6"
+                    >
+                      6
+                    </button>
+                  </td> -->
+                  <!--  -->
+                  <td>
+                    <button
+                      (click)="toggleDisciplinedTeamStrength(5)"
+                      [class.active]="disciplinedTeamStrength == 5"
+                    >
+                      5
+                    </button>
+                  </td>
+                  <td>
+                    <button
+                      (click)="toggleDisciplinedTeamStrength(4)"
+                      [class.active]="disciplinedTeamStrength == 4"
+                    >
+                      4
+                    </button>
+                  </td>
+                  <td>
+                    <button
+                      (click)="toggleDisciplinedTeamStrength(3)"
+                      [class.active]="disciplinedTeamStrength == 3"
+                    >
+                      3
+                    </button>
+                  </td>
+                </tr>
+              </table>
+            </div>
+            <div class="form-box four-buttons">
+              <label>Tým hráče, který byl faulován</label>
+              <table>
+                <tr>
+                   <!-- Na produkciu nie -->
+                  <!-- <td>
+                    <button
+                      (click)="toggleFouledTeamStrength(6)"
+                      [class.active]="fouledTeamStrength == 6"
+                    >
+                      6
+                    </button>
+                  </td> -->
+                  <!--  -->
+                  <td>
+                    <button
+                      (click)="toggleFouledTeamStrength(5)"
+                      [class.active]="fouledTeamStrength == 5"
+                    >
+                      5
+                    </button>
+                  </td>
+                  <td>
+                    <button
+                      (click)="toggleFouledTeamStrength(4)"
+                      [class.active]="fouledTeamStrength == 4"
+                    >
+                      4
+                    </button>
+                  </td>
+                  <td>
+                    <button
+                      (click)="toggleFouledTeamStrength(3)"
+                      [class.active]="fouledTeamStrength == 3"
+                    >
+                      3
+                    </button>
+                  </td>
+                </tr>
+              </table>
+            </div>
+            <!-- Na produkciu nie -->
+            <div class="form-box">
+              <label >
+                *stav hráčů bez hráče za odvolaného brankáře
+              </label>
+            </div>
+          <!--  -->
+            <div class="submits">
+              <button class="submit" (click)="submit('normal')">
+                Uložit záznam
+              </button>
+              <button
+                class="submit"
+                (click)="submit('save_next')"
+                *ngIf="editPage"
+              >
+                Uložit a přejít na další
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="canvas-box">
+        <h2>&nbsp;</h2>
+        <div class="box-inner">
+          <div class="playground show_playground" (click)="onMapClick($event)">
+            <ng-container *ngIf="!reversed_sides">
+              <img
+                src="/assets/image/logos/{{ homeShortcut }}.png"
+                onerror="this.src='/assets/image/logos/default.png';"
+                class="home-logo"
+              />
+
+              <img
+                src="/assets/image/logos/{{ awayShortcut }}.png"
+                onerror="this.src='/assets/image/logos/default.png';"
+                class="away-logo"
+              />
+            </ng-container>
+            <ng-container *ngIf="reversed_sides">
+              <img
+                src="/assets/image/logos/{{ awayShortcut }}.png"
+                onerror="this.src='/assets/image/logos/default.png';"
+                class="home-logo"
+              />
+              <img
+                src="/assets/image/logos/{{ homeShortcut }}.png"
+                onerror="this.src='/assets/image/logos/default.png';"
+                class="away-logo"
+              />
+            </ng-container>
+
+            <div
+              class="coordinate1"
+              [ngStyle]="{
+                'left.px': getCoordinatesMap(lokace, 'x'),
+                'top.px': getCoordinatesMap(lokace, 'y')
+              }"
+              *ngIf="lokace != ''"
+            ></div>
+            <img src="/assets/image/hriste-634x312.svg" />
+          </div>
+          <div class="coordinates-list">
+            <div class="form-box">
+              <label>Vyloučení</label>
+              <div class="input-box red">
+                <input
+                  type="text"
+                  (focus)="checkXY()"
+                  (blur)="uncheckXY()"
+                  [(ngModel)]="lokace"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <loading-small *ngIf="loading"></loading-small>
+
+  <div
+    class="menu"
+    *ngIf="contextmenu"
+    [ngStyle]="{ 'left.px': contextmenuX, 'top.px': contextmenuY }"
+  >
+    <a (click)="toggleSupervize()" class="supervize">Supervize</a>
+    <a (click)="toggleHelp()" class="help">Nápověda</a>
+  </div>
+
+  <div
+    class="help-box"
+    *ngIf="showhelp"
+    [ngStyle]="{ 'left.px': contextmenuX, 'top.px': contextmenuY }"
+  >
+    <h3>{{ help_title }}</h3>
+    <button class="closebtn" (click)="showhelp = false"></button>
+    <div class="desc">
+      {{ help_desc }}
+    </div>
+  </div>
+</div>

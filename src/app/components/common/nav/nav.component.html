@@ -1,0 +1,35 @@
+<div class="nav">
+
+  <ng-container *ngIf="isActive('select')">
+    <div class="nav-left">
+      <a routerLink="/select" class="nav-item game">Výběr zápasu</a>
+    </div>
+  </ng-container>
+
+  <ng-container *ngIf="isActive('tracking')">
+    <div class="nav-left">
+      <a routerLink="/select" class="nav-item game">Výběr zápasu</a>
+      <div class="nav-item tracking">Tracking</div>
+    </div>
+  </ng-container>
+
+  <ng-container *ngIf="isActive('supervize')">
+    <div class="nav-left">
+      <a routerLink="/select" class="nav-item game">Výběr zápasu</a>
+      <div class="nav-item tracking">Supervize</div>
+    </div>
+  </ng-container>
+
+  <ng-container *ngIf="isActive('timeline')">
+    <div class="nav-left">
+      <a routerLink="/select" class="nav-item game">Výběr zápasu</a>
+      <div class="nav-item tracking">Supervize</div>
+    </div>
+  </ng-container>
+
+  <div class="nav-right">
+    <div class="nav-item user">{{username}}</div>
+    <a (click)="logout()" class="nav-item logout">Odhlásit se</a>
+  </div>
+
+</div>

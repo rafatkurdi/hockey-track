@@ -1,0 +1,107 @@
+.nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 46px;
+  box-shadow: 0 2px 2px 0 rgba(11, 13, 14, 0.5), 0 2px 16px 0 rgba(11, 13, 14, 0.5);
+  background-color: #ffffff;
+  padding: 0 16px;
+  padding-top: 10px;
+  z-index: 20000000;
+
+  &::after {
+    display: block;
+    content: "";
+    clear: both;
+  }
+
+  .nav-left {
+    float: left;
+    width: 50%;
+  }
+
+  .nav-right {
+    float: left;
+    width: 50%;
+    text-align: right;
+
+    .nav-item {
+      margin-right: 0;
+      margin-left: 16px;
+    }
+  }
+
+  .nav-item {
+    display: inline-block;
+    font-size: 12px;
+    font-weight: normal;
+    font-stretch: normal;
+    font-style: normal;
+    line-height: 1.5;
+    letter-spacing: normal;
+    color: #0b0d0e;
+    margin-right: 16px;
+
+    &.game {
+      &::before {
+        display: block;
+        width: 20px;
+        height: 16px;
+        content: "";
+        background: url(/assets/image/hockey-sticks.svg) no-repeat;
+        float: left;
+        margin-right: 8px;
+      }
+    }
+
+    &.tracking {
+      &::before {
+        display: block;
+        width: 16px;
+        height: 16px;
+        content: "";
+        background: url(/assets/image/bullseye-pointer.svg) no-repeat;
+        float: left;
+        margin-right: 8px;
+        margin-top: 1px;
+      }
+    }
+
+    &.user {
+      &::before {
+        display: block;
+        width: 16px;
+        height: 16px;
+        content: "";
+        background: url(/assets/image/user-circle.svg) no-repeat;
+        float: left;
+        margin-right: 8px;
+      }
+    }
+
+    &.logout {
+      &::before {
+        display: block;
+        width: 16px;
+        height: 12px;
+        content: "";
+        background: url(/assets/image/sign-out.svg) no-repeat;
+        float: left;
+        margin-right: 8px;
+        margin-top: 3px;
+      }
+    }
+
+  }
+
+  a.nav-item {
+    text-decoration: none;
+
+    &:hover,
+    &:active,
+    &:focus {
+      text-decoration: underline;
+    }
+  }
+}

@@ -1,0 +1,156 @@
+<app-nav></app-nav>
+
+<div id="myModal" class="modal" *ngIf="modal">
+  <div class="modal-content">
+    <span class="close" (click)="modal = false">&times;</span>
+
+    <ng-container *ngFor="let item of opened_games">
+      <div *ngIf="item.watch" class="match-box">
+        <div class="round">{{ item.date | date: "dd.MM.yyyy" }}</div>
+        <div class="team">{{ item.home }} - {{ item.away }}</div>
+        <button (click)="removeWatch(item.id)">Zavřít zápas</button>
+      </div>
+    </ng-container>
+    <br /><br />
+  </div>
+</div>
+
+<div class="page-heading">
+  <div class="heading-inner">
+    <h1>{{ league_name }}</h1>
+    <!--
+    <select [(ngModel)]="selectedLeague" (change)="reloadGames()">
+      <option value="" selected>Všechny soutěže</option>
+      <option *ngFor="let league of leagues" value="{{league.id}}">{{league.name}}</option>
+    </select>
+    -->
+    <button (click)="modal = true">Vypsat otevřené zápasy</button>
+  </div>
+</div>
+
+<div class="page">
+  <div class="games-select">
+    <div class="calendar">
+      <div class="date">{{ selected_month }} {{ selected_year }}</div>
+      <div class="day">
+        <div class="day-text">{{ selectedDate | date: "dd.MM.yyyy" }}</div>
+      </div>
+      <dp-day-calendar
+        class="date-picker"
+        [(ngModel)]="selectedDate"
+        (onSelect)="selectDate($event)"
+        [config]="calendar_settings"
+        (onLeftNav)="onChangeMonth($event)"
+        (onRightNav)="onChangeMonth($event)"
+      >
+      </dp-day-calendar>
+    </div>
+
+    <div class="games-list">
+      <div
+        class="game"
+        *ngFor="let item of filterGames()"
+        [class.noactive]="!checkOpenedGame2(item.id)"
+      >
+        <table class="game-info">
+          <tr>
+            <td class="team-left">
+              <img
+                src="/assets/image/logos/{{ item.home.abbreviation }}.png"
+                onerror="this.src='/assets/image/logos/default.png';"
+              />
+            </td>
+            <td class="data">
+              <div class="round">
+                {{ item.date | date: "dd.MM.yyyy" }} ･
+                {{ item.competition.name }}
+              </div>
+              <div class="team">
+                {{ item.home.abbreviation }} - {{ item.away.abbreviation }}
+              </div>
+            </td>
+            <td class="team-right">
+              <img
+                src="/assets/image/logos/{{ item.away.abbreviation }}.png"
+                onerror="this.src='/assets/image/logos/default.png';"
+              />
+            </td>
+          </tr>
+        </table>
+        <div class="buttons" *ngIf="tracking && !supervision">
+          <button (click)="checkOpenedGame(item.id, 'tracking')">
+            Tracking
+          </button>
+          <button (click)="checkOpenedGame(item.id, 'supervize')" disabled>
+            Supervize
+          </button>
+          <button (click)="checkOpenedGame(item.id, 'timeline')" disabled>
+            Střídání
+          </button>
+        </div>
+        <div class="buttons" *ngIf="tracking && supervision">
+          <button (click)="checkOpenedGame(item.id, 'tracking')">
+            Tracking
+          </button>
+          <button (click)="checkOpenedGame(item.id, 'supervize')">
+            Supervize
+          </button>
+          <button (click)="checkOpenedGame(item.id, 'timeline')">
+            Střídání
+          </button>
+        </div>
+
+        <div class="buttons" *ngIf="!tracking && supervision">
+          <button (click)="checkOpenedGame(item.id, 'tracking')">
+            Tracking
+          </button>
+          <button (click)="checkOpenedGame(item.id, 'supervize')">
+            Supervize
+          </button>
+          <button (click)="checkOpenedGame(item.id, 'timeline')">
+            Střídání
+          </button>
+        </div>
+
+        <button
+          (click)="lock(item.id)"
+          class="lock"
+          *ngIf="checkOpenedGame2(item.id)"
+        ></button>
+
+        <div class="info-watch" *ngIf="isActiveWatch(item.id)">
+          Sledování je aktivní
+        </div>
+      </div>
+
+      <!--
+      <br>
+      <h2>Otevřené zápasy</h2>
+
+      <div class="opened">
+        <div class="game" *ngFor="let item of opened_games">
+
+          <table class="game-info">
+            <tr>
+              <td class="team-left">
+                {{item.home}}
+              </td>
+              <td class="data">
+                <div class="round">{{item.date | date:'dd.MM.yyyy'}}</div>
+              </td>
+              <td class="team-right">
+                {{item.away}}
+              </td>
+            </tr>
+          </table>
+
+          <button (click)="lock(item.id)" class="lock" *ngIf="checkOpenedGame2(item.id)"></button>
+
+        </div>
+      </div>
+      -->
+    </div>
+  </div>
+</div>
+
+<loading *ngIf="loading"></loading>

@@ -1,0 +1,76 @@
+<div class="map">
+
+  <div class="title lh">UR</div>
+  <div class="title ls">BR</div>
+  <div class="title c">C</div>
+  <div class="title h5">FH</div>
+  <div class="title ph">UL</div>
+  <div class="title ps">BL</div>
+
+  <svg width="280px" height="193px" viewBox="0 0 280 193" version="1.1" xmlns="http://www.w3.org/2000/svg"
+    xmlns:xlink="http://www.w3.org/1999/xlink">
+    <defs>
+      <linearGradient x1="50%" y1="0%" x2="50%" y2="100%" id="linearGradient-1">
+        <stop stop-color="#329AF0" offset="0%"></stop>
+        <stop stop-color="#1C7CD6" offset="100%"></stop>
+      </linearGradient>
+    </defs>
+
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+      <g id="branka">
+
+        <path d="M268,0 C274.627417,0 280,5.372583 280,12 L280,192 L276,192 L276,12.1904762 C276,7.75234968 272.552162,4.1386823 268.249179,4.00389746 L268,4 L12,4 C7.66508574,4 4.13545713,7.52992914 4.00380682,11.935364 L4,12.1904762 L4,192 L0,192 L0,12 C0,5.372583 5.372583,0 12,0 L268,0 Z" 
+          id="Path" fill="#DA001D">
+        </path>
+
+        <!--LS-->
+        <path d="M100,102 L100,142.001 L100.003842,142.280905 C100.044042,143.743635 100.398346,145.127902 101.001727,146.368678 L61.044,192.001 L8,192.001 L8,102.001 L100,102 Z"
+         id="Path" fill="#ADB5BD" fill-rule="nonzero" (click)="toggle('br')" *ngIf="!active_br">
+        </path>
+        <path d="M100,102 L100,142.001 L100.003842,142.280905 C100.044042,143.743635 100.398346,145.127902 101.001727,146.368678 L61.044,192.001 L8,192.001 L8,102.001 L100,102 Z"
+          id="Path" fill="url(#linearGradient-1)" fill-rule="nonzero" (click)="toggle('br')" *ngIf="active_br">
+        </path>
+
+        <!--PS-->
+        <path d="M272.108033,102.001 L272.108033,192.001 L218.772033,192.001 L179,146.58082 C179.653684,145.314222 180.044689,143.889999 180.100976,142.380193 L180.108033,142.001 L180.108,102 L272.108033,102.001 Z" 
+          id="Path" fill="#ADB5BD" fill-rule="nonzero" (click)="toggle('bl')" *ngIf="!active_bl">
+        </path>
+        <path d="M272.108033,102.001 L272.108033,192.001 L218.772033,192.001 L179,146.58082 C179.653684,145.314222 180.044689,143.889999 180.100976,142.380193 L180.108033,142.001 L180.108,102 L272.108033,102.001 Z" 
+          id="Path" fill="url(#linearGradient-1)" fill-rule="nonzero" (click)="toggle('bl')" *ngIf="active_bl">
+        </path>
+
+        <!--C-->
+        <path d="M124,8 L156,8 L156,52 L170,52 C173.313708,52 176,54.6862915 176,58 L176,142 C176,145.313708 173.313708,148 170,148 L110,148 C106.686292,148 104,145.313708 104,142 L104,58 C104,54.6862915 106.686292,52 110,52 L124,52 L124,8 Z" 
+          id="Path" fill="#ADB5BD" fill-rule="nonzero" (click)="toggle('ce')" *ngIf="!active_ce && disable_ce==false && !goal">
+        </path>
+        <path d="M124,8 L156,8 L156,52 L170,52 C173.313708,52 176,54.6862915 176,58 L176,142 C176,145.313708 173.313708,148 170,148 L110,148 C106.686292,148 104,145.313708 104,142 L104,58 C104,54.6862915 106.686292,52 110,52 L124,52 L124,8 Z" 
+          id="Path" fill="url(#linearGradient-1)" fill-rule="nonzero" (click)="toggle('ce')" *ngIf="active_ce">
+        </path>
+
+        <!--5H-->
+        <path d="M176.583522,150 L214,192 L66,192 L103.416478,150 C105.095459,151.453314 107.270472,152.360078 109.657573,152.439508 L110,152.445197 L170,152.445197 L170.279905,152.441398 C172.57096,152.379134 174.669525,151.554868 176.325729,150.215692 L176.583522,150 Z" 
+          id="Path" fill="#ADB5BD" fill-rule="nonzero" (click)="toggle('fh')" *ngIf="!active_fh">
+        </path>
+        <path d="M176.583522,150 L214,192 L66,192 L103.416478,150 C105.095459,151.453314 107.270472,152.360078 109.657573,152.439508 L110,152.445197 L170,152.445197 L170.279905,152.441398 C172.57096,152.379134 174.669525,151.554868 176.325729,150.215692 L176.583522,150 Z" 
+          id="Path" fill="url(#linearGradient-1)" fill-rule="nonzero" (click)="toggle('fh')" *ngIf="active_fh">
+        </path>
+
+        <!--PH-->
+        <path d="M266,8 C269.313708,8 272,10.6862915 272,14 L272,98 L180,98 L180,58 L179.996158,57.7200952 C179.850487,52.4196609 175.580339,48.1495127 170.279905,48.0038418 L170,48 L160,48 L160,8 L266,8 Z" 
+          id="Path" fill="#ADB5BD" fill-rule="nonzero" (click)="toggle('ul')" *ngIf="!active_ul">
+        </path>
+        <path d="M266,8 C269.313708,8 272,10.6862915 272,14 L272,98 L180,98 L180,58 L179.996158,57.7200952 C179.850487,52.4196609 175.580339,48.1495127 170.279905,48.0038418 L170,48 L160,48 L160,8 L266,8 Z" 
+          id="Path" fill="url(#linearGradient-1)" fill-rule="nonzero" (click)="toggle('ul')" *ngIf="active_ul">
+        </path>
+
+        <!--LH-->
+        <path d="M120,8 L120,48 L110,48 L109.720095,48.0038418 C104.419661,48.1495127 100.149513,52.4196609 100.003842,57.7200952 L100,58 L100,98 L8,98 L8,14 C8,10.6862915 10.6862915,8 14,8 L120,8 Z" 
+          id="Path" fill="#ADB5BD" fill-rule="nonzero" (click)="toggle('ur')" *ngIf="!active_ur">
+        </path>
+        <path d="M120,8 L120,48 L110,48 L109.720095,48.0038418 C104.419661,48.1495127 100.149513,52.4196609 100.003842,57.7200952 L100,58 L100,98 L8,98 L8,14 C8,10.6862915 10.6862915,8 14,8 L120,8 Z" 
+          id="Path" fill="url(#linearGradient-1)" fill-rule="nonzero" (click)="toggle('ur')" *ngIf="active_ur">
+        </path>
+      </g>
+    </g>
+  </svg>
+</div>
