@@ -1381,7 +1381,7 @@ export class TimelineComponent implements OnInit {
       }
       case eventEnum[0]: {
         event.playerId && (players.playerId = event.playerId);
-        event.goalkeeperId && (players.goalkeeperId = event.goalkeeperId);
+        //event.goalkeeperId && (players.goalkeeperId = event.goalkeeperId);
         event.blockerId && (players.blockerId = event.blockerId);
       }
       case eventEnum[10]: {
